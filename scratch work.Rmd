@@ -1,0 +1,130 @@
+---
+title: "scratch work"
+author: "Carine Hajjar"
+date: "4/17/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Figure 1: stan_glm and sigma instead of lm and 95% confidence interval
+Below I recreate figure 1 with a stan_glm regression rather than a linear regression. I also use sigma as the measure of uncertainty rather than the 95% confidence interval. It shows a different measure of uncertainty that reveals larger levels of variance for each estimated treatment effect. 
+```{r}
+# We are looking to see the effect of different cues (liberal, conservative, and conservative from congress) on Republicans, Democrats, and Independents. 
+# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Republicans:
+# With each of the regressions, we see data filtered for Republicans:
+#conservative treatment
+model1 <- stan_glm(Support ~ contrump, data = data[data$republican == 1 & (data$contrump == 1 | data$self == 1),], refresh = 0, family = "binomial")
+
+#liberal treatment
+model2 <- stan_glm(Support ~ libtrump, data = data[data$republican == 1 & (data$libtrump == 1 | data$self == 1),], refresh = 0, family = "binomial")
+#GOP treatment
+model3 <- stan_glm(support_gop ~ gopleader, data = data[data$republican == 1 & (data$gopleader == 1 | data$self == 1),], refresh = 0, family = "binomial")
+# ****MISTAKE**** in the paper, figure 1 has the treatment effect of about -0.03 on the conservatives yet the outcome is 0.008
+# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Democrats:
+# With each of the regressions, we see data filtered for Democrats:
+#conservative treatment
+model1dem <- stan_glm(Support ~ contrump, data = data[data$democrat == 1 & (data$contrump == 1 | data$self == 1),], refresh = 0, family = "binomial")
+#liberal treatment
+model2dem <- stan_glm(Support ~ libtrump, data = data[data$democrat == 1 & (data$libtrump == 1 | data$self == 1),], refresh = 0, family = "binomial")
+#GOP treatment
+model3dem <- stan_glm(support_gop ~ gopleader, data = data[data$democrat == 1 & (data$gopleader == 1 | data$self == 1),], refresh = 0, family = "binomial")
+# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Independents:
+# With each of the regressions, we see data filtered for Independents:
+#conservative treatment
+model1ind <- stan_glm(Support ~ contrump, data = data[data$republican == 0 & data$democrat == 0 & (data$contrump == 1 | data$self == 1),], refresh = 0, family = "binomial")
+#liberal treatment
+model2ind <- stan_glm(Support ~ libtrump, data = data[data$republican == 0 & data$democrat == 0 & (data$libtrump == 1 | data$self == 1),], refresh = 0, family = "binomial")
+#GOP treatment
+model3ind <- stan_glm(support_gop ~ gopleader, data = data[data$republican == 0 & data$democrat == 0 & (data$gopleader == 1 | data$self == 1),], refresh = 0, family = "binomial")
+```
+
+```{r}
+# CONSERVATIVE CUE ON REPS, DEMS, INDS
+# Here, I pull the effect of the conservative cue on each political group by simulating the models 
+mod1 <- posterior_linpred(model1, transform = TRUE)
+mod1dem <- posterior_linpred(model1dem, transform = TRUE)
+mod1ind <- posterior_linpred(model1ind, transform = TRUE)
+# median prediction of the posterior_linpred for the cons cue:
+mm1 <- median(mod1[,2])
+mm1dem <- median(mod1dem[,2])
+mm1ind <- median(mod1ind[,2])
+conservative.treat <- c(mm1, mm1dem, mm1ind)
+# Here's the uncertainty for each prediction for the conservative cue's effect on each political group using posterior_linpred:
+mm1q2 <- quantile(mod1[,2], probs = c(0.025))
+mm1qdem2 <- quantile(mod1dem[,2], probs = c(0.025))
+mm1qind2 <- quantile(mod1ind[,2], probs = c(0.025))
+mm1q9 <- quantile(mod1[,2], probs = c(0.975))
+mm1qdem9 <- quantile(mod1dem[,2], probs = c(0.975))
+mm1qind9 <- quantile(mod1ind[,2], probs = c(0.975))
+lower.cons<- c(mm1q2, mm1qdem2, mm1qind2)
+upper.cons <- c(mm1q9, mm1qdem9, mm1qind9)
+
+# LIBERAL CUE ON REPS, DEMS, INDS
+# Here, I pull the effect of the conservative cue on each political group by simulating the models 
+mod2 <- posterior_linpred(model2, transform = TRUE)
+mod2dem <- posterior_linpred(model2dem, transform = TRUE)
+mod2ind <- posterior_linpred(model2ind, transform = TRUE)
+# median prediction of the posterior_linpred for the cons cue:
+mm2 <- median(mod2[,2])
+mm2dem <- median(mod2dem[,2])
+mm2ind <- median(mod2ind[,2])
+liberal.treat <- c(mm2, mm2dem, mm2ind)
+# Here's the uncertainty for each prediction for the conservative cue's effect on each political group using posterior_linpred:
+mm2q2 <- quantile(mod2[,2], probs = c(0.025))
+mm2qdem2 <- quantile(mod2dem[,2], probs = c(0.025))
+mm2qind2 <- quantile(mod2ind[,2], probs = c(0.025))
+mm2q9 <- quantile(mod2[,2], probs = c(0.975))
+mm2qdem9 <- quantile(mod2dem[,2], probs = c(0.975))
+mm2qind9 <- quantile(mod2ind[,2], probs = c(0.975))
+lower.liberal <- c(mm2q2, mm2qdem2, mm2qind2)
+upper.liberal <- c(mm2q9, mm2qdem9, mm2qind9)
+
+# GOP CUE 
+# Here, I pull the effect of the conservative cue on each political group by simulating the models 
+mod3 <- posterior_linpred(model3, transform = TRUE)
+mod3dem <- posterior_linpred(model3dem, transform = TRUE)
+mod3ind <- posterior_linpred(model3ind, transform = TRUE)
+# median prediction of the posterior_linpred for the cons cue:
+mm3 <- median(mod3[,3])
+mm3dem <- median(mod3dem[,3])
+mm3ind <- median(mod3ind[,3])
+gop.treat <- c(mm3, mm3dem, mm3ind)
+# Here's the uncertainty for each prediction for the conservative cue's effect on each political group using posterior_linpred:
+mm3q2 <- quantile(mod3[,3], probs = c(0.025))
+mm3qdem2 <- quantile(mod3dem[,3], probs = c(0.025))
+mm3qind2 <- quantile(mod3ind[,3], probs = c(0.025))
+mm3q9 <- quantile(mod3[,3], probs = c(0.975))
+mm3qdem9 <- quantile(mod3dem[,3], probs = c(0.975))
+mm3qind9 <- quantile(mod3ind[,3], probs = c(0.975))
+lower.gop <- c(mm3q2, mm3qdem2, mm3qind2)
+upper.gop <- c(mm3q9, mm3qdem9, mm3qind9)
+
+# This standardizes the spacing and divisions in the figure
+a <- c(.8, 1, 1.2)
+# I deleted this portion becauase it "mutes" the figure
+#dev.off()
+# This plots the corresponding coefficients
+plot(a, liberal.treat, pch = c(15, 16, 17), axes = F, xlab = "Treatment Condition", ylab = "Increased Probability of Voting for Liberal Policy", ylim = c(0, 1), col  = c("dark red", "dark blue", "dark green"), xlim = c(.7, 3.3), cex = 1, main = "Average Treatment Effect of Policy Cues")
+segments(x0 = a, y0 = lower.liberal, x1 = a, y1 = upper.liberal)
+points(a+1, conservative.treat, pch = c(15, 16, 17), col  = c("dark red", "dark blue", "dark green"), cex = 1)
+segments(x0 = a+1, y0 = lower.cons, x1 = a+1, y1 = upper.cons)
+points(a+2, gop.treat, pch = c(15, 16, 17), col  = c("dark red", "dark blue", "dark green"), cex = 1)
+segments(x0 = a+2, y0 = lower.gop, x1 = a+2, y1 = upper.gop)
+# x-axis labels
+axis(1, at = c(1,2,3), labels = c("Liberal Trump", "Conservative Trump", "Republicans\n in Congress"), cex.axis = .8)
+axis(2, at = seq(0, 1, 0.5), las = 2, cex.axis = .8)
+# dashled lines 
+#abline(h = 0, lty = 2)
+abline(v = seq(1.5, 3.5, 1), lty = 2, col = "grey")
+# This labels the points in the first panel
+# text(2.8,.28, "comparison group is no cue")
+text(1, .5, "Republicans", cex = .7)
+text(.82, .85, "Democrats", cex = .7)
+text(1.4, .6, "Independents", cex = .7)
+box()
+```
+
+Next, I plan to expand on the findings in Figure 3: Average Treatment Effect by Republican Party Strength. This figure deals with the sub-hypothesis that states: Strong party affiliates that share party with the cue-giver are more likely to be party loyalists. The authors test this hypothesis by running a linear regression that predicts support of a cue with the interaction between partisanship strength and liberal/conservative cues. The figure, however, only takes into account partisanship values from 4-7 (Independent to very Republican) meaning that this model only tests the treatment effect of liberal or conservative cues on Republicans, not Democrats. This makese sense given that the authors are largely looking at the impact Trump has on Republican partisanship throughout the paper. However, they do claim that the phenomenas found in their paper (especially about the disconnect between ideology and partisanship) can occur among Democrats. 
