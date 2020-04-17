@@ -14,6 +14,7 @@ library(tidyverse)
 library(stargazer)
 library(jtools)
 library(ggstance)
+library(rstanarm)
 #Please cite as: 
 # Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
 # R package version 5.2.2. https://CRAN.R-project.org/package=stargazer 
@@ -25,8 +26,10 @@ library(readstata13)
 data <- read.dta13("Ideology_Trump.dta")
 mturk <- read.csv("Trump_Obama.csv")
 ```
+
 # Abstract
 Barber and Pope (2018) show that the electorate is more influenced by party position than real ideology. The results of the paper and the replication indicate that party loyalists vote in line with their leader, regarless of the political content of their leader's cues. More specifically, voters with low political knowledge, high partisanship, and high approval of their leader are more likely to support their leader's cues, regardless of the true ideological implications, even if they are not in line with the party's traditional views. I looked at Barber and Pope's regressions testing the causal effect of conservative and liberal cues from President Trump on Republican, Democrats, and Independents with varying levels of political knowledge, partisanship, approval of Trump, and political ideology. I took the regression on partisanship and knowledge as well as the overall regression of average cue response among all political identities and ran a more robust binomial regression as well as corrected for a mistake in the first figure of the paper. I found that party loyalists are not necessarily ideological loyalists and, more specifically, that many Republican Trump supporters respond positively to liberal or conservative cues from Trump but not necessarily from others. This finding forces Americans to rethink the importance of parties and the ideological strength of their positions. 
+\newpage
 
 # Introduction
 My replication paper will be looking at Michael Barber and Jeremy C. Pope's paper, "Does Party Trump Ideology? Disentangling Party and Ideology in America" which was published in the American Political Science Review in 2018. The paper tests whether citizens truly use their policy views to choose a partisan affiliation and if they see partisanship as more of a social identity. The paper asks: "how sincerely held are expressed political and policy opinions and are these opinions based on ideological convictions, or group loyalty?".^[1, Barber and Pope] The authors use Trump's unusual presidency to answer these questions. Since President Trump is both the leader of the GOP as well as a president that endorses both liberal and conservative views, the authors test the effect of Trump's political stances on voters' political stances.
@@ -48,243 +51,15 @@ There is an increasing amount of discussion around the legitimacy of partisan id
 
 Iyengar and Westwood (2015) mark the rise of party identity in American life, making Barber and Pope's conclusions ever more salient. According to their study, partisan polarization is as strong as racial polarization and has implications on nonpolitical judgements about members of the opposite party. ^[Iyengar] Taken with the Barber and Pope results, this could mean that cue-givers are merely partisan symbols, decreasing the importance of the actual content of their cues. This also reinforces the idea that partisanship. 
 
-## Figure 
+# Replication
+I was able to replicate the Interactions Models table (Table 1) and Figures 1-5 which test each of the hypotheses in the paper. The only issue I ran into was in Figure 1: Average Treatment Effect of Policy Cues. This table claims that cues from GOP leaders on Republicans make Republicans about 3% less likely to vote liberal. This is not consistent with the outcome of the authors' regression which shows that Republicans were slightly more likely to vote liberally. I believe that this may be a small mistake on the part of the authors.
 
-```{r, fig.height = 4, fig.width= 6.5, fig.align= "center"}
-data <- read.dta13("Ideology_Trump.dta")
-#summary(data)
-#view(data)
-#Table 1 - Regression Results
-# In the table in the paper, the authors use the ordinary least squares regression model
-# Support is for support of the policy
-# These interaction models are used because people who strongly identify as conservative, for example, are more likely to be in the Republican party.
-# Since I am trying to best replciate Table 1, I used the same regression components. I also kept the data parametes the same because these seem to be key in identifying which subjects we are looking at. I am still trying to find a way to better understand each variable (I may even email these authors) because there is no exhaustive list. To stay safe, I left the data parameters as they were.
-# Interacting knowledge with political cues as well as key control variables:
-# this model looks at the interaction between political knowledge and conservative/liberal cues
-model1 <- lm(Support ~ libtrump*knowledge + contrump*knowledge + trump_approve 
-                     + ideo5b + republican + party_strength + race_white, 
-# Here, the author filtered for conservative trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
-                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 1 tells us that those with more political knwoledge are less likely to respond to liberal or conservative cues.
-# Interacting party strength with political cues as well as key control variables:
-model2 <- lm(Support ~ libtrump*party_strength + contrump*party_strength 
-                     + knowledge + ideo5b + trump_approve + republican + race_white, 
-# Here, the author chooses data for those with above-average partisanship. They also filtered for conservative Trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
-                     data = data[data$pid7 %in% c(4, 5, 6, 7) 
-                                 & (data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 2 shows us that strong partisans are more likely to respond to Trump cues, whether liberal or conservative.
-# Interacting Trump approval with political cues as well as key control variables:
-model3 <- lm(Support ~ libtrump*trump_approve + contrump*trump_approve 
-                     + knowledge + ideo5b + republican + party_strength + race_white, 
-# Here, they filtered for conservative Trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
-                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 3 shows us that those who approve of Trump are more likely to respond to Trump cues, whether liberal or conservative.
-# Interacting self-placed ideology with political cues as well as key control variables:
-model4 <- lm(Support ~ libtrump*ideo5b + contrump*ideo5b + knowledge 
-                     + trump_approve + republican + party_strength + race_white, 
-                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 4 shows us that those who identify as strongly conservative are more likely to respond to Trump cues, whether liberal or conservative.
-```
- <br>
-```{r, results= "asis", fig.height = 4, fig.width= 6.5, fig.align= "center"}
-cat("\\begin{table}[!htbp]")
-cat("\\centering")
-cat("\\caption{Interaction Models, Including Control Variables}")
-cat("\\label{Table 1}")
-cat("\\scalebox{.7}{")
-stargazer(model1, model2, model3, model4, 
-          type = "latex", 
-          summary = FALSE, 
-          title = "Interaction Models, Including Control Variables", 
-          column.labels = c("Knowledge", "Party Strength", "Trump Approval", "Ideology"), 
-          covariate.labels = c("Liberal Treatment", "Knowledge", "Conservative Treatment", "Trump Approval", "Ideology", "Republican", "Party Strength", "White", "Liberal treat * Knowledge", "Conservative treat * Knowledge", "Liberal treat * Party Strength", "Conservative treat * Party Strength", "Liberal treat * Trump Approval", "Conservative treat * Trump Approval", "Liberal treat * Ideology", "Conservative treat * Ideology"), 
-          column.sep.width = "-10pt",
-          font.size = "small", 
-          omit.stat = "all", 
-          float = FALSE)
-cat("}") # for the end of the scalebox
-cat("\\end{table}")
-```
+# Extension
+In the extension, I will be addressing a plotting issue in Figure 1, adding sigma and stan_glm to the Figure 1, expanding the test of partisanship to Democrats as well as Republicans on Figure 3, and using stan_glm and its associate prediction functions on Figure 3 as opposed to a linear regression and its linear prediction function. 
 
-![Table 1, Barber and Pope](/Users/carinehajjar/Desktop/table_1.png)
-<br>
+## Figure 1: Mistake
+To begin, I will address the issue with Figure 1, which I describe above. I have actually already addressed it in the replication done above. Essentially, the regression result is not consisten with the outcome plotted in the graph. This could be an important addition to the findings in the paper - Republicans actually have a very slight aversion to cues from GOP leaders. This deepends the authors' findings that partisan identity may be more of a group identity rather than an ideological marker.
 
-## Graphic
-```{r, fig.height = 3, fig.width= 5}
-# I want to recreate figure 1 in the paper using ggplot. Figure one looks at which groups respond to which cues by looking at the average answers for each of the 10 questions. 
-# We are looking to see the effect of different cues (liberal, conservative, and conservative from congress) on Republicans, Democrats, and Independents. 
-# In terms of the regressions, I will be keeping the same data and roughly the same code. The way I graph it will be different:
-# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Republicans:
-# With each of the regressions, we see data filtered for Republicans:
-#conservative treatment
-model1 <- lm(Support ~ race_white + contrump, data = data[data$republican == 1 & (data$contrump == 1 | data$self == 1),])
-#liberal treatment
-model2 <- lm(Support ~ race_white + libtrump, data = data[data$republican == 1 & (data$libtrump == 1 | data$self == 1),])
-#GOP treatment
-model3 <- lm(support_gop ~ race_white + gopleader, data = data[data$republican == 1 & (data$gopleader == 1 | data$self == 1),])
-# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Democrats:
-# With each of the regressions, we see data filtered for Democrats:
-#conservative treatment
-model1dem <- lm(Support ~ race_white + contrump, data = data[data$democrat == 1 & (data$contrump == 1 | data$self == 1),])
-#liberal treatment
-model2dem <- lm(Support ~ race_white + libtrump, data = data[data$democrat == 1 & (data$libtrump == 1 | data$self == 1),])
-#GOP treatment
-model3dem <- lm(support_gop ~ race_white + gopleader, data = data[data$democrat == 1 & (data$gopleader == 1 | data$self == 1),])
-# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Independents:
-# With each of the regressions, we see data filtered for Independents:
-#conservative treatment
-model1ind <- lm(Support ~ race_white + contrump, data = data[data$republican == 0 & data$democrat == 0 & (data$contrump == 1 | data$self == 1),])
-#liberal treatment
-model2ind <- lm(Support ~ race_white + libtrump, data = data[data$republican == 0 & data$democrat == 0 & (data$libtrump == 1 | data$self == 1),])
-#GOP treatment
-model3ind <- lm(support_gop ~ race_white + gopleader, data = data[data$republican == 0 & data$democrat == 0 & (data$gopleader == 1 | data$self == 1),])
-# Here, the authors pull the effect of the conservative cue on each political group: 
-conservative.treat <- c(model1$coef[3], model1dem$coef[3], model1ind$coef[3])
-# Here's the standard error for the conservative cue's effect on each political group:
-conservative.se <- c(coef(summary(model1))[, "Std. Error"][3], coef(summary(model1dem))[, "Std. Error"][3], coef(summary(model1ind))[, "Std. Error"][3])
-# This creates confidence intervals for the effect of conservative cues on each group:
-lower.cons <- conservative.treat - 1.96*conservative.se
-upper.cons <- conservative.treat + 1.96*conservative.se
-# Here, the authors pull the effect of the liberal cue on each political group:
-liberal.treat <- c(model2$coef[3], model2dem$coef[3], model2ind$coef[3])
-# Here's the standard error for the liberal cue's effect on each political group:
-liberal.se <- c(coef(summary(model2))[, "Std. Error"][3], coef(summary(model2dem))[, "Std. Error"][3], coef(summary(model2ind))[, "Std. Error"][3])
-# This creates confidence intervals for the effect of liberal cues on each group:
-lower.liberal <- liberal.treat - 1.96*liberal.se
-upper.liberal <- liberal.treat + 1.96*liberal.se
-# Here, the authors pull the effect of the GOP congressional cue on each political group:
-gop.treat <- c(model3$coef[3], model3dem$coef[3], model3ind$coef[3])
-# Here's the standard error for the GOP congressional cue effect on each political group:
-gop.se <- c(coef(summary(model3))[, "Std. Error"][3], coef(summary(model3dem))[, "Std. Error"][3], coef(summary(model3ind))[, "Std. Error"][3])
-# This creates confidence intervals for the effect of the GOP congressional cue on each group:
-lower.gop <- gop.treat - 1.96*gop.se
-upper.gop <- gop.treat + 1.96*gop.se
-```
-<br>
-```{r, fig.height = 4, fig.width= 6.5}
-# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Republicans:
-republican_cue_response <- plot_summs(model1, model2, model3, 
-           scale = TRUE, 
-           omit.coefs = c("race_white", "(Intercept)"), 
-           coefs = c("Conservative Cue" = "contrump", "Liberal Cue" = "libtrump", "GOP Congressional Cue" = "gopleader"),
-           colors = c("red", "red", "red"), 
-           legend.title = "none")
-# I use this to get rid of the legend:
-rep_theme <- theme(
-    legend.position = "none")
-# I put the graphs all together:
-republican_cue_response + rep_theme + labs(title = "Cue Effects on Republicans", x = "Increased Probability of Voting for Liberal Policy") 
-```
-<br>
-```{r, fig.height = 4, fig.width= 6.5}
-# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Democrats:
-republican_cue_response <- plot_summs(model1dem, model2dem, model3dem, 
-           scale = TRUE, 
-           omit.coefs = c("race_white", "(Intercept)"), 
-           coefs = c("Conservative Cue" = "contrump", "Liberal Cue" = "libtrump", "GOP Congressional Cue" = "gopleader"),
-           colors = c("blue", "blue", "blue"), 
-           legend.title = "none")
-# I use this to get rid of the legend:
-rep_theme <- theme(
-    legend.position = "none")
-# I put the graphs all together
-republican_cue_response + rep_theme + labs(title = "Cue Effects on Democrats", x = "Increased Probability of Voting for Liberal Policy") 
-```
-<br>
-```{r, fig.height = 4, fig.width= 6.5}
-# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Independents:
-republican_cue_response <- plot_summs(model1ind, model2ind, model3ind, 
-           scale = TRUE, 
-           omit.coefs = c("race_white", "(Intercept)"), 
-           coefs = c("Conservative Cue" = "contrump", "Liberal Cue" = "libtrump", "GOP Congressional Cue" = "gopleader"), 
-           colors = c("purple", "purple", "purple"), 
-           legend.title = "none")
-# I use this to get rid of the legend:
-rep_theme <- theme(
-    legend.position = "none")
-# I put the graphs all together:
-republican_cue_response + rep_theme + labs(title = "Cue Effects on Independents", x = "Increased Probability of Voting for Liberal Policy") 
-```
-<br>
-
-In these three plots, I demonstrate the effect of different political cues on different political groups in the study. In the paper, there is a graphic with this data however it combines nine models in one plot, making it quite difficult to decipher. I decided to split this plot up into three: one for each political group. Each graph looks at the increased probability of voting for liberal policies after receiving a conservative or liberal cue from President Trump as well as a conservative cue from GOP congressional leaders.
-
-The first graph looks at the impact of these cues on Republicans' political tendencies. The plot shows that Republicans side more conservatively when they receive a conservative cue from Trump and side more liberally when they receive a liberal cue from Trump. There is a negligible effect from GOP congressional cues. 
-
-The second graph looks at the impact of the cues on Democrats' political tendencies. It shows that when presented with a conservative cue from Trump, Democrats are less likely to vote liberally. When presented with a liberal cue, Democrats' political tendencies do not change. The same is true with a GOP congressional cue. 
-
-The third graph looks at the impact of cues on Independents' political tendencies. In terms of magnitude change in probability of voting liberally, Independents show the least impact from all three cues. The conservative and liberal cues from Trump cause Independents to be more likely to vote liberally. The GOP congressional cue cause Independents to be slightly less likely to vote liberally.
-
-# Replications Appendix
-As mentioned above, this paper has a main hypothesis and four sub-hypotheses. The main hypothesis states that the influence of President Trump will demonstrate the existence of a large bloc of party loyalists in the electorate when his influence moves opinion in either a liberal or conservative direction based on his political cue. Those who are most likely to be party loyalists have a lack of knowledge about the party's traditional views and a lack of self-proclaimed "symbolic ideological commitment." Their null hypothesis is that Trump's cue has no effect on subgroups. These are the four sub-hypotheses:
- 1. **Knowledge Hypothesis:** Only the those with less knowledge should react to the cue and behave as party loyalists presumably because the knowledgeable gain little from the treatment (political cue).
- 2. **Partisan Hypothesis:** Strong paarty affiliates that share party with the cue-giver are more likely to be party loyalists.
- 3. **Approval Hypothesis:** Those who approve of the cue-giver should be more likely to be party loyalists. 
- 4. **Symbolic Ideology Hypothesis:** Self-described conservatives should hold firm to their presumed beliefs and are less likely to be party loyalists because they stick with their self-described policy tenets.
- 
-For my replication, I will look at a table with regressions for each of these hypotheses as well as five figures that plot the outcomes of these hypotheses. 
-
-
-## Table 1
-```{r table 1, fig.height = 4, fig.width= 6.5, fig.align= "center"}
-data <- read.dta13("Ideology_Trump.dta")
-#summary(data)
-#view(data)
-#Table 1 - Regression Results
-# In the table in the paper, the authors use the ordinary least squares regression model
-# Support is for support of the policy
-# These interaction models are used because people who strongly identify as conservative, for example, are more likely to be in the Republican party.
-# Since I am trying to best replciate Table 1, I used the same regression components. I also kept the data parametes the same because these seem to be key in identifying which subjects we are looking at. I am still trying to find a way to better understand each variable (I may even email these authors) because there is no exhaustive list. To stay safe, I left the data parameters as they were.
-# Interacting knowledge with political cues as well as key control variables:
-# this model looks at the interaction between political knowledge and conservative/liberal cues
-model1 <- lm(Support ~ libtrump*knowledge + contrump*knowledge + trump_approve 
-                     + ideo5b + republican + party_strength + race_white, 
-# Here, the author filtered for conservative trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
-                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 1 tells us that those with more political knwoledge are less likely to respond to liberal or conservative cues.
-# Interacting party strength with political cues as well as key control variables:
-model2 <- lm(Support ~ libtrump*party_strength + contrump*party_strength 
-                     + knowledge + ideo5b + trump_approve + republican + race_white, 
-# Here, the author chooses data for those with above-average partisanship. They also filtered for conservative Trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
-                     data = data[data$pid7 %in% c(4, 5, 6, 7) 
-                                 & (data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 2 shows us that strong partisans are more likely to respond to Trump cues, whether liberal or conservative.
-# Interacting Trump approval with political cues as well as key control variables:
-model3 <- lm(Support ~ libtrump*trump_approve + contrump*trump_approve 
-                     + knowledge + ideo5b + republican + party_strength + race_white, 
-# Here, they filtered for conservative Trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
-                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 3 shows us that those who approve of Trump are more likely to respond to Trump cues, whether liberal or conservative.
-# Interacting self-placed ideology with political cues as well as key control variables:
-model4 <- lm(Support ~ libtrump*ideo5b + contrump*ideo5b + knowledge 
-                     + trump_approve + republican + party_strength + race_white, 
-                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 4 shows us that those who identify as strongly conservative are more likely to respond to Trump cues, whether liberal or conservative.
-```
-
-```{r, results= "asis", fig.height = 4, fig.width= 6.5, fig.align= "center"}
-cat("\\begin{table}[!htbp]")
-cat("\\centering")
-cat("\\caption{Interaction Models, Including Control Variables}")
-cat("\\label{Table 1}")
-cat("\\scalebox{.7}{")
-stargazer(model1, model2, model3, model4, 
-          type = "latex", 
-          summary = FALSE, 
-          title = "Interaction Models, Including Control Variables", 
-          column.labels = c("Knowledge", "Party Strength", "Trump Approval", "Ideology"), 
-          covariate.labels = c("Liberal Treatment", "Knowledge", "Conservative Treatment", "Trump Approval", "Ideology", "Republican", "Party Strength", "White", "Liberal treat * Knowledge", "Conservative treat * Knowledge", "Liberal treat * Party Strength", "Conservative treat * Party Strength", "Liberal treat * Trump Approval", "Conservative treat * Trump Approval", "Liberal treat * Ideology", "Conservative treat * Ideology"), 
-          column.sep.width = "-10pt",
-          font.size = "small", 
-          omit.stat = "all", 
-          float = FALSE)
-cat("}") # for the end of the scalebox
-cat("\\end{table}")
-```
-
-![Table 1, Barber and Pope](/Users/carinehajjar/Desktop/table_1.png)
-
-## Figure 1: Average Treatment Effect by Party Affiliation
 ```{r, fig.height = 4, fig.width= 5, fig.align= "center"}
 # We are looking to see the effect of different cues (liberal, conservative, and conservative from congress) on Republicans, Democrats, and Independents. 
 # Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Republicans:
@@ -360,83 +135,93 @@ box()
 <br>
 ![Figure 1, Barber and Pope](/Users/carinehajjar/Desktop/fig1.png)
 
-It is important to note that what is being plotted is the coefficient of cues (contrump, libtrump, gopleader).
-I found one mistake - the cofficient for Republicans in Congress on the Republican subset is displayed as about -0.03 probability of voting for liberal policy while the regression tells us that it is actually about 0.008. 
+I found one mistake - the cofficient for Republicans in Congress on the Republican subset is displayed as about -0.03 probability of voting for liberal policy while the regression tells us that it is actually about 0.008. I correct this in my figure. 
 
-## Figure 2: Average Treatment Effect by Knowledge
-```{r, fig.height = 4, fig.width= 6.5, fig.align= "center"}
-# This code will culminate in plot that looks at the treatment effect (political cue) on those with varying political knowledge. # The hypothesis here states: Only the those with less knowledge should react to the cue and behave as party loyalists presumably because the knowledgeable gain little from the treatment (political cue).
-# Model 1 is a linear regression that looks that the impact of political knowledge on response to cues. The authors include an interaction between liberal cues and knowledge as well as conservative cues and knowledge to see if there is any discrepancy between cues' effects with knowledge:
-model1 <- lm(Support ~ race_white + libtrump*knowledge + contrump*knowledge, data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-#control: there is no cue in this data table
-newdata = as.data.frame(cbind(rep(1, 9), rep(0, 9), rep(0, 9), seq(0, 8, 1)))
-colnames(newdata) <- c("race_white", "contrump", "libtrump", "knowledge")
-#conservative treatment: this data table contains a conservative cue for each level of knowledge
-newdata1 = as.data.frame(cbind(rep(1, 9), rep(1, 9), rep(0,9), seq(0, 8, 1)))
-colnames(newdata1) <- c("race_white", "contrump", "libtrump", "knowledge")
-# This table predicts the response at each level of knowledge given no cue.
-plx0 <- predict(model1, newdata = newdata, type = "response", se = T)
-# This table predicts the response at each level of knowledge given a conservative cue.
-plx1 <- predict(model1, newdata = newdata1, type = "response", se = T)
-# NOT REALLY SURE WHY THE MODEL1 IS USED IN FIRST PREDICT - WHAT DOES PLX0 DO?
-# This is the treatment effect: the difference between response at each knowledge level with a conservative cue and a response at teach knowledge level with a cue. It is the causal effect of the conservative treatment.
-diff.cons <- plx1$fit - plx0$fit
-# This is the standard error of both predictions and will serve as the "whiskers" in the plot:
-diff.cons.se <- sqrt(plx1$se.fit^2 + plx0$se.fit^2)
-# These are the upper and lower confidence levels that will be plotted:
-upper.cons <- diff.cons + 1.96*diff.cons.se
-lower.cons <- diff.cons - 1.96*diff.cons.se
-par(mfrow = c(1, 2)) 
-#dev.new(width = 4.5, height = 7)
-# This plots the diff.cons (the causal effect of a conservative cue at each level of knowledge) with the upper and lower confidence intervals crafted with the standard error. The function also gives the range of the plots, the titles, and the axes. 
-# These are just the points, titles, and axes:
-plot(seq(0, 8, 1), diff.cons, ylim = c(-.25, .15), pch = 16, ylab = "Estimated Average Treatment Effect", xlab = "Level of Political Knowledge", axes = F, main = "Conservative Trump Treatment")
-#This adds on the upper and lower confidence intervals showing the uncertainty of the estimate. It also designates the color of the bars denoting uncertainty:
-segments(x0 = c(seq(0, 8, 1), x1 = seq(0, 8, 1)), y0 = lower.cons, y1 = upper.cons, col = "#d17b7b80", lwd = 2)
-# This brings the points back in front of the lines of uncertainty:
-points(seq(0, 8, 1), diff.cons, pch = 16)
-abline(h = 0)
-# This adds an axis at zero:
-axis(1, at = seq(0, 8, 1))
-# This adds the y-axis and denotes the range:
-axis(2, at = seq(-.25, .15, .05), las = 2)
-# This puts a border around the plot:
-box()
-# Now we are looking at the liberal cue's causal effect at each interval of knowledge:
+## Figure 1: stan_glm and sigma instead of lm and 95% confidence interval
+Below I recreate figure 1 with a stan_glm regression rather than a linear regression. I also use sigma as the measure of uncertainty rather than the 95% confidence interval. It shows a different measure of uncertainty that reveals larger levels of variance for each estimated treatment effect. 
+```{r}
+# We are looking to see the effect of different cues (liberal, conservative, and conservative from congress) on Republicans, Democrats, and Independents. 
+# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Republicans:
+# With each of the regressions, we see data filtered for Republicans:
+#conservative treatment
+model1 <- stan_glm(Support ~ race_white + contrump, data = data[data$republican == 1 & (data$contrump == 1 | data$self == 1),], refresh = 0)
 #liberal treatment
-# This data frame designates the liberal cue for each level of knowledge:
-newdata1 = as.data.frame(cbind(rep(1, 9), rep(0, 9), rep(1,9), seq(0, 8, 1)))
-colnames(newdata1) <- c("race_white", "contrump", "libtrump", "knowledge")
-# This table predicts the response at each level of knowledge given no cue.
-plx0 <- predict(model1, newdata = newdata, type = "response", se = T)
-# This table predicts the response at each level of knowledge given a liberal cue.
-plx1 <- predict(model1, newdata = newdata1, type = "response", se = T)
-# This is the treatment effect: the difference between response at each knowledge level with a liberal cue and a response at teach knowledge level with a cue. It is the causal effect of the liberal treatment.
-diff.lib <- plx1$fit - plx0$fit
-# This is the standard error of both predictions and will serve as the "whiskers" in the plot:
-diff.lib.se <- sqrt(plx1$se.fit^2 + plx0$se.fit^2)
-# These are the upper and lower confidence levels that will be plotted:
-upper.lib <- diff.lib + 1.96*diff.lib.se
-lower.lib <- diff.lib - 1.96*diff.lib.se
-# the plotting here is the SAME as above
-#dev.new(width = 4.5, height = 7)
-plot(seq(0, 8, 1), diff.lib, ylim = c(-.25, .15), pch = 16, ylab = "Estimated Average Treatment Effect", xlab = "Level of Political Knowledge", axes = F, main = "Liberal Trump Treatment")
-segments(x0 = c(seq(0, 8, 1), x1 = seq(0, 8, 1)), y0 = lower.lib, y1 = upper.lib, col = "#4286f480", lwd = 2)
-points(seq(0, 8, 1), diff.lib, pch = 16)
-abline(h = 0)
-axis(1, at = seq(0, 8, 1))
-axis(2, at = seq(-.25, .15, .05), las = 2)
+model2 <- stan_glm(Support ~ race_white + libtrump, data = data[data$republican == 1 & (data$libtrump == 1 | data$self == 1),], refresh = 0)
+#GOP treatment
+model3 <- stan_glm(support_gop ~ race_white + gopleader, data = data[data$republican == 1 & (data$gopleader == 1 | data$self == 1),], refresh = 0)
+# ****MISTAKE**** in the paper, figure 1 has the treatment effect of about -0.03 on the conservatives yet the outcome is 0.008
+# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Democrats:
+# With each of the regressions, we see data filtered for Democrats:
+#conservative treatment
+model1dem <- stan_glm(Support ~ race_white + contrump, data = data[data$democrat == 1 & (data$contrump == 1 | data$self == 1),], refresh = 0)
+#liberal treatment
+model2dem <- stan_glm(Support ~ race_white + libtrump, data = data[data$democrat == 1 & (data$libtrump == 1 | data$self == 1),], refresh = 0)
+#GOP treatment
+model3dem <- stan_glm(support_gop ~ race_white + gopleader, data = data[data$democrat == 1 & (data$gopleader == 1 | data$self == 1),], refresh = 0)
+# Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Independents:
+# With each of the regressions, we see data filtered for Independents:
+#conservative treatment
+model1ind <- stan_glm(Support ~ race_white + contrump, data = data[data$republican == 0 & data$democrat == 0 & (data$contrump == 1 | data$self == 1),], refresh = 0)
+#liberal treatment
+model2ind <- stan_glm(Support ~ race_white + libtrump, data = data[data$republican == 0 & data$democrat == 0 & (data$libtrump == 1 | data$self == 1),], refresh = 0)
+#GOP treatment
+model3ind <- stan_glm(support_gop ~ race_white + gopleader, data = data[data$republican == 0 & data$democrat == 0 & (data$gopleader == 1 | data$self == 1),], refresh = 0)
+# Here, the authors pull the effect of the conservative cue on each political group: 
+conservative.treat <- c(model1$coef[3], model1dem$coef[3], model1ind$coef[3])
+# Here's the standard error for the conservative cue's effect on each political group:
+conservative.sigma <- c(sigma(model1), sigma(model1dem), sigma(model1ind))
+# This creates confidence intervals for the effect of conservative cues on each group:
+lower.cons <- conservative.treat - conservative.sigma
+upper.cons <- conservative.treat + conservative.sigma
+# Here, the authors pull the effect of the liberal cue on each political group:
+liberal.treat <- c(model2$coef[3], model2dem$coef[3], model2ind$coef[3])
+# Here's the standard error for the liberal cue's effect on each political group:
+liberal.sigma <- c(sigma(model2), sigma(model2dem), sigma(model2ind))
+# This creates confidence intervals for the effect of liberal cues on each group:
+lower.liberal <- liberal.treat - liberal.sigma
+upper.liberal <- liberal.treat + liberal.sigma
+# Here, the authors pull the effect of the GOP congressional cue on each political group:
+gop.treat <- c(model3$coef[3], model3dem$coef[3], model3ind$coef[3])
+# Here's the standard error for the GOP congressional cue effect on each political group:
+gop.sigma <- c(sigma(model3), sigma(model3dem), sigma(model3ind))
+# This creates confidence intervals for the effect of the GOP congressional cue on each group:
+lower.gop <- gop.treat - gop.sigma
+upper.gop <- gop.treat + gop.sigma
+# This standardizes the spacing and divisions in the figure
+a <- c(.8, 1, 1.2)
+# I deleted this portion becauase it "mutes" the figure
+#dev.off()
+# This plots the corresponding coefficients
+plot(a, liberal.treat, pch = c(15, 16, 17), axes = F, xlab = "Treatment Condition", ylab = "Increased Probability of Voting for Liberal Policy", ylim = c(-.60, .60), col  = c("dark red", "dark blue", "dark green"), xlim = c(.7, 3.3), cex = 1.5, main = "Average Treatment Effect of Policy Cues")
+segments(x0 = a, y0 = lower.liberal, x1 = a, y1 = upper.liberal)
+points(a+1, conservative.treat, pch = c(15, 16, 17), col  = c("dark red", "dark blue", "dark green"), cex = 1.5)
+segments(x0 = a+1, y0 = lower.cons, x1 = a+1, y1 = upper.cons)
+points(a+2, gop.treat, pch = c(15, 16, 17), col  = c("dark red", "dark blue", "dark green"), cex = 1.5)
+segments(x0 = a+2, y0 = lower.gop, x1 = a+2, y1 = upper.gop)
+# x-axis labels
+axis(1, at = c(1,2,3), labels = c("Liberal Trump", "Conservative Trump", "Republicans\n in Congress"), cex.axis = .8)
+axis(2, at = seq(-.6, .6, .1), las = 1, cex.axis = .8)
+# dashled lines 
+abline(h = 0, lty = 2)
+abline(v = seq(1.5, 3.5, 1), lty = 2, col = "grey")
+# This labels the points in the first panel
+text(2.8,.28, "comparison group is no cue")
+text(1, .16, "Republicans", cex = .7)
+text(.82, -.01, "Democrats", cex = .7)
+text(1.4, .04, "Independents", cex = .7)
 box()
 ```
-<br>
-![Figure 2, Barber and Pope](/Users/carinehajjar/Desktop/fig2.png)
 
-## Figure 3: Average Treatment Effect by Party strength
+Next, I plan to expand on the findings in Figure 3: Average Treatment Effect by Republican Party Strength. This figure deals with the sub-hypothesis that states: Strong party affiliates that share party with the cue-giver are more likely to be party loyalists. The authors test this hypothesis by running a linear regression that predicts support of a cue with the interaction between partisanship strength and liberal/conservative cues. The figure, however, only takes into account partisanship values from 4-7 (Independent to very Republican) meaning that this model only tests the treatment effect of liberal or conservative cues on Republicans, not Democrats. This makese sense given that the authors are largely looking at the impact Trump has on Republican partisanship throughout the paper. However, they do claim that the phenomenas found in their paper (especially about the disconnect between ideology and partisanship) can occur among Democrats. 
+
+## Figure 3: Average Treatment Effect by Party strength among Democrats 
 ```{r, fig.height = 4, fig.width= 6.5, fig.align= "center"}
+# FIGURE 3 EXTENSION 1 
+# EXTENSION: TESTING FIGURE THREE WITH DEMOCRATS (ID= 1-4)
 # This code will culminate in plot that looks at the treatment effect (political cue) on those with varying partisan affiliation. 
 # The hypothesis here states: Strong party affiliates that share party with the cue-giver are more likely to be party loyalists.
-# This model is the basis of the predictions and will help determine the causal effect of political cues on different levels of partisanship among Republicans. This model estimates support of policy based on race and the interaction between cues (conservative and liberal) and political ideology:
-model1 <- lm(Support ~ race_white + libtrump*pid7 + contrump*pid7, data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1) & data$pid7 %in% c(4, 5, 6, 7),])
+# This model is the basis of the predictions and will help determine the causal effect of political cues on different levels of partisanship among DEMOCRATS. This model estimates support of policy based on race and the interaction between cues (conservative and liberal) and political ideology:
+model1 <- lm(Support ~ race_white + libtrump*pid7 + contrump*pid7, data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1) & data$pid7 %in% c(1, 2, 3, 4),])
 # This data table serves as the control - the baseline for comparison. There is no cue in this data table:
 newdata = as.data.frame(cbind(rep(1, 4), rep(0, 4), rep(0, 4), seq(4, 7, 1)))
 colnames(newdata) <- c("race_white", "contrump", "libtrump", "pid7")
@@ -463,7 +248,8 @@ plot(seq(4, 7, 1), diff.cons, ylim = c(-.25, .25), pch = 16, ylab = "Estimated A
 segments(x0 = c(seq(4, 7, 1), x1 = seq(4, 7, 1)), y0 = lower.cons, y1 = upper.cons, col = "#d17b7b80", lwd = 2)
 points(seq(4, 7, 1), diff.cons, pch = 16)
 abline(h = 0)
-axis(1, at = seq(4, 7, 1), labels = c("Independent", "Lean GOP", "Weak GOP", "Strong GOP"), cex.axis = .8)
+# changed titles to match change in id
+axis(1, at = seq(4, 7, 1), labels = c("Independent", "Lean DEM", "Weak DEM", "Strong DEM"), cex.axis = .8)
 axis(2, at = seq(-.45, .25, .05), las = 2)
 box()
 # The same steps as above are repeated here, but using the liberal cue as treatment on Republican partisans:
@@ -484,148 +270,98 @@ plot(seq(4, 7, 1), diff.lib, ylim = c(-.25, .25), pch = 16, ylab = "Estimated Av
 segments(x0 = c(seq(4, 7, 1), x1 = seq(4, 7, 1)), y0 = lower.lib, y1 = upper.lib, col = "#4286f480", lwd = 2)
 points(seq(4, 7, 1), diff.lib, pch = 16)
 abline(h = 0)
-axis(1, at = seq(4, 7, 1), labels = c("Independent", "Lean GOP", "Weak GOP", "Strong GOP"), cex.axis = .8)
+# changed titles to match change in id
+axis(1, at = seq(4, 7, 1), labels = c("Independent", "Lean DEM", "Weak DEM", "Strong DEM"), cex.axis = .8)
 axis(2, at = seq(-.25, .45, .05), las = 2)
 box()
-# ADD ON BY LOOKING AT PARTY AFFILIATION EFFECT ON DEMOCRATS
+
+# NOTES: SHOWS HARDLY ANY EFFECT, CONSERVATIVE CUE HAS IMPACT ON STRONG LIB - MAKES MORE LIKELY TO VOTE LIB 
 ```
 <br>
 ![Figure 3, Barber and Pope](/Users/carinehajjar/Desktop/fig3.png)
 
-## Figure 4: Average Treatment Effect by Trump Approval
-```{r, fig.height = 4, fig.width= 6.5, fig.align= "center"}
-# This code will culminate in plot that looks at the treatment effect (political cue) on those with varying approval levels of Trump. 
-# The hypothesis here states: Those who approve of the cue-giver should be more likely to be party loyalists. 
-# This model is the basis of the predictions and will help determine the causal effect of political cues on different levels of approval of Trump. This model estimates support of policy based on race and the interaction between cues (conservative and liberal) and approval:
-model1 <- lm(Support ~ race_white + libtrump*trump_approve + contrump*trump_approve, data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# This data table serves as the control - the baseline for comparison. There is no cue in this data table:
-newdata = as.data.frame(cbind(rep(1, 5), rep(0, 5), rep(0, 5), seq(1, 5, 1)))
-colnames(newdata) <- c("race_white", "contrump", "libtrump", "trump_approve")
-# conservative treatment: The effect of a conservative cue on those who identify with a conservative party with differing levels of Trump approval:
-newdata1 = as.data.frame(cbind(rep(1, 5), rep(1, 5), rep(0, 5), seq(1, 5, 1)))
-colnames(newdata1) <- c("race_white", "contrump", "libtrump", "trump_approve")
-# These are predictions of the level of support at each approval level given the data table above with no cue:
-plx0 <- predict(model1, newdata = newdata, type = "response", se = T)
-# These are predictions of the level of support of a cue at each level of Trump approval given a conservative cue:
-plx1 <- predict(model1, newdata = newdata1, type = "response", se = T)
-# Here we calculate the causal effect and the standard error:
-diff.cons <- plx1$fit - plx0$fit
-diff.cons.se <- sqrt(plx1$se.fit^2 + plx0$se.fit^2)
-# These are the upper and lower confidence intervals:
-upper.cons <- diff.cons + 1.96*diff.cons.se
-lower.cons <- diff.cons - 1.96*diff.cons.se
-par(mfrow = c(1, 2)) 
-# Here is the plot of the treatment effect of a conservative cue on different levels of Trump approval (the steps are almost the same as those in previous figures):
-#dev.new(width = 4.5, height = 7)
-plot(seq(1, 5, 1), diff.cons, ylim = c(-.15, .22), pch = 16, ylab = "Estimated Average Treatment Effect", xlab = "Level of Trump Approval", axes = F, main = "Conservative Trump Treatment")
-segments(x0 = c(seq(1, 5, 1), x1 = seq(1, 5, 1)), y0 = lower.cons, y1 = upper.cons, col = "#d17b7b80", lwd = 2)
-points(seq(1, 5, 1), diff.cons, pch = 16)
-abline(h = 0)
-axis(1, at = seq(1, 5, 1), labels = c("Strongly\nDisapprove", "", "Neutral", "", "Strongly\nApprove"), cex.axis = .8)
-axis(2, at = seq(-.25, .25, .05), las = 2)
-box()
-# liberal treatment: The effect of a liberal cue on those who identify with a conservative party with differing levels of Trump approval:
-newdata1 = as.data.frame(cbind(rep(1, 5), rep(1, 5), rep(0, 5), rep(0, 5), rep(1, 5), seq(1, 5, 1)))
-colnames(newdata1) <- c("race_white", "republican", "democrat", "contrump", "libtrump", "trump_approve")
-# predictions with anad without cue given the previous regression model:
-plx0 <- predict(model1, newdata = newdata, type = "response", se = T)
-plx1 <- predict(model1, newdata = newdata1, type = "response", se = T)
-# The causal effect of liberal treatment and standard error:
-diff.lib <- plx1$fit - plx0$fit
-diff.lib.se <- sqrt(plx1$se.fit^2 + plx0$se.fit^2)
-# Confidence intervals:
-upper.lib <- diff.lib + 1.96*diff.lib.se
-lower.lib <- diff.lib - 1.96*diff.lib.se
-# Here is the plot of the treatment effect of a liberal on different levels of Trump approval (the steps are almost the same as those in previous figures):
-#dev.new(width = 4.5, height = 7)
-plot(seq(1, 5, 1), diff.lib, ylim = c(-.15, .22), pch = 16, ylab = "Estimated Average Treatment Effect", xlab = "Level of Trump Approval", axes = F, main = "Liberal Trump Treatment")
-segments(x0 = c(seq(1, 5, 1), x1 = seq(1, 5, 1)), y0 = lower.lib, y1 = upper.lib, col = "#4286f480", lwd = 2)
-points(seq(1, 5, 1), diff.lib, pch = 16)
-abline(h = 0)
-axis(1, at = seq(1, 5, 1), labels = c("Strongly\nDisapprove", "", "Neutral", "", "Strongly\nApprove"), cex.axis = .8)
-axis(2, at = seq(-.25, .25, .05), las = 2)
-box()
-```
-<br>
-![Figure 4, Barber and Pope](/Users/carinehajjar/Desktop/fig4.png)
-
-## Figure 5: Average Treatment Effect by Self-Described Ideology 
-```{r, fig.height = 4, fig.width= 6.5, fig.align= "center"}
-# This code will culminate in plot that looks at the treatment effect (political cue) on those with varying ideologies. 
-# The hypothesis here states: Self-described conservatives should hold firm to their presumed beliefs and are less likely to be party loyalists because they stick with their self-described policy tenets.
-# The steps here are the same as those above, just using ideology. I will not go through each in detail.
-model1 <- lm(Support ~ race_white + libtrump*ideo5b + contrump*ideo5b, data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-#control
-newdata = as.data.frame(cbind(rep(1, 5), rep(0, 5), rep(0, 5), seq(1, 5, 1)))
-colnames(newdata) <- c("race_white", "contrump", "libtrump", "ideo5b")
-#conservative treatment
-newdata1 = as.data.frame(cbind(rep(1, 5), rep(1, 5), rep(0, 5), seq(1, 5, 1)))
-colnames(newdata1) <- c("race_white", "contrump", "libtrump", "ideo5b")
-# predictions of treatment effect 
-plx0 <- predict(model1, newdata = newdata, type = "response", se = T)
-plx1 <- predict(model1, newdata = newdata1, type = "response", se = T)
-# causal effect and se:
-diff.cons <- plx1$fit - plx0$fit
-diff.cons.se <- sqrt(plx1$se.fit^2 + plx0$se.fit^2)
-# confidence intervals:
-upper.cons <- diff.cons + 1.96*diff.cons.se
-lower.cons <- diff.cons - 1.96*diff.cons.se
-par(mfrow = c(1, 2)) 
-# plots
-#dev.new(width = 4.5, height = 7)
-plot(seq(1, 5, 1), diff.cons, ylim = c(-.16, .16), pch = 16, ylab = "Estimated Average Treatment Effect", xlab = "Self-Placed Ideology", axes = F, main = "Conservative Trump Treatment")
-segments(x0 = c(seq(1, 5, 1), x1 = seq(1, 5, 1)), y0 = lower.cons, y1 = upper.cons, col = "#d17b7b80", lwd = 2)
-points(seq(1, 5, 1), diff.cons, pch = 16)
-abline(h = 0)
-axis(1, at = seq(1, 5, 1), labels = c("Strong\nLiberal", "", "Moderate", "", "Strong\nConservative"), cex.axis = .8)
-axis(2, at = seq(-.25, .25, .05), las = 2)
-box()
-# same steps, just with liberal cue
-#liberal treatment
-newdata1 = as.data.frame(cbind(rep(1, 5), rep(0, 5), rep(1, 5), seq(1, 5, 1)))
-colnames(newdata1) <- c("race_white", "contrump", "libtrump", "ideo5b")
-plx0 <- predict(model1, newdata = newdata, type = "response", se = T)
-plx1 <- predict(model1, newdata = newdata1, type = "response", se = T)
-diff.lib <- plx1$fit - plx0$fit
-diff.lib.se <- sqrt(plx1$se.fit^2 + plx0$se.fit^2)
-upper.lib <- diff.lib + 1.96*diff.lib.se
-lower.lib <- diff.lib - 1.96*diff.lib.se
-#dev.new(width = 4.5, height = 7)
-plot(seq(1, 5, 1), diff.lib, ylim = c(-.16, .16), pch = 16, ylab = "Estimated Average Treatment Effect", xlab = "Self-Placed Ideology", axes = F, main = "Liberal Trump Treatment")
-segments(x0 = c(seq(1, 5, 1), x1 = seq(1, 5, 1)), y0 = lower.lib, y1 = upper.lib, col = "#4286f480", lwd = 2)
-points(seq(1, 5, 1), diff.lib, pch = 16)
-abline(h = 0)
-axis(1, at = seq(1, 5, 1), labels = c("Strong\nLiberal", "", "Moderate", "", "Strong\nConservative"), cex.axis = .8)
-axis(2, at = seq(-.25, .25, .05), las = 2)
-box()
-```
-<br>
-![Figure 5, Barber and Pope](/Users/carinehajjar/Desktop/fig5.png)
-
-## Replication: What I Achieved and What I Did Not 
-A clear statement about what aspects of the paper you were able to replicate and which parts, if any, you were not able to replicate.
-
-I was able to replicate the Interactions Models table (Table 1) and Figures 1-5 which test each of the hypotheses in the paper. The only issue I ran into was in Figure 1: Average Treatment Effect of Policy Cues. This table claims that cues from GOP leaders on Republicans make Republicans about 3% less likely to vote liberal. This is not consistent with the outcome of the authors' regression which shows that Republicans were slightly more likely to vote liberally. I believe that this may be a small mistake on the part of the authors.
-
-
-# Proposed Extension
-In the extension, I will be addressing a plotting issue in Figure 1, expanding the test of partisanship to Democrats as well as Republicans, and choosing one of the figures to experiment with a different regression model. 
-
-To begin, I will address the issue with Figure 1, which I describe above. I have actually already addressed it in the replication done above. Essentially, the regression result is not consisten with the outcome plotted in the graph. This could be an important addition to the findings in the paper - Republicans actually have a very slight aversion to cues from GOP leaders. This deepends the authors' findings that partisan identity may be more of a group identity rather than an ideological marker. 
-
-Next, I plan to expand on the findings in Figure 3: Average Treatment Eddect by Republican Party Strength. This figure deals with the sub-hypothesis that states: Strong party affiliates that share party with the cue-giver are more likely to be party loyalists. The authors test this hypothesis by running a linear regression that predicts support of a cue with the interaction between partisanship strength and liberal/conservative cues. The figure, however, only takes into account partisanship values from 4-7 (Independent to very Republican) meaning that this model only tests the treatment effect of liberal or conservative cues on Republicans, not Democrats. This makese sense given that the authors are largely looking at the impact Trump has on Republican partisanship throughout the paper. However, they do claim that the phenomenas found in their paper (especially about the disconnect between ideology and partisanship) can occur among Democrats. 
 
 In order to see if the relationship between political cues and partisanship is only exclusive to Republicans, I would like to run a similar model on partisanship levels among Democrats. This would mean repeating the steps done in Figure 3, but testing the cue's effects on partisanship levels from 1-4 (very Democrat to Independent). I predict that there will be a different effect given the fact that Democrats would be answering cues from Trump. Therefore, I expect there to be some sort of aversionary effect: even if Trump advocates a liberal policy, they will support it less than their Republican counterpoints at the same level of partisanship just because the cue is from the a Republican leader (especially one as polarizing as Trump). 
 
-Finally, I want to take one of the figures (either 2 or 4) and see if I can create a more robust model. These regression models are currently linear and use interactions to predict the outcome of a cue given something like partisanship, ideology, etc. The authors then use the predict function to predict support of a policy and to find the causal effect of recieving a cue by subtracting the response outcome for the treated from a fake data set of untreated individuals. I believe that by using a binomial regression and the posterior_linpred function, I could create a more robust model and prediction, thus achieving a more accurate causal effect. I would compare these two models with LOO as well as using standard errors and sigma. 
+# Figure 3: Stan_glm and posterior_linpred instead of lm and predict 
+Finally, I want to take figure 3 and figure 2 and see if I can create a more robust model. These regression models are currently linear and use interactions to predict the outcome of a cue given something like partisanship, ideology, etc. The authors then use the predict function to predict support of a policy and to find the causal effect of recieving a cue by subtracting the response outcome for the treated from a fake data set of untreated individuals. I believe that by using a binomial regression and the posterior_linpred function, I could create a more robust model and prediction, thus achieving a more accurate causal effect. I would compare these two models with LOO as well as using standard errors and sigma. 
 
+The only downside of this method is the fact that posterior_linpred does not give an uncertainty measure for each of its estimates while predict yields standard error. That is the reason there are no uncertainty measures on the graph. 
+```{r, fig.height = 4, fig.width= 6.5, fig.align= "center"}
+# FIGURE 3 EXTENSION 2
+# EXTENSION: TESTING FIGURE THREE WITH BINOMIAL REGRESSION
+# This code will culminate in plot that looks at the treatment effect (political cue) on those with varying partisan affiliation. 
+# The hypothesis here states: Strong party affiliates that share party with the cue-giver are more likely to be party loyalists.
+# This model is the basis of the predictions and will help determine the causal effect of political cues on different levels of partisanship among DEMOCRATS. This model estimates support of policy based on race and the interaction between cues (conservative and liberal) and political ideology:
+model1 <- stan_glm(Support ~ race_white + libtrump*pid7 + contrump*pid7, data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1) & data$pid7 %in% c(4, 5, 6, 7),], refresh = 0)
+# model <- lm(Support ~ race_white + libtrump*pid7 + contrump*pid7, data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1) & data$pid7 %in% c(4, 5, 6, 7),])
+# This data table serves as the control - the baseline for comparison. There is no cue in this data table:
+newdata = as.data.frame(cbind(rep(1, 4), rep(0, 4), rep(0, 4), seq(4, 7, 1)))
+colnames(newdata) <- c("race_white", "contrump", "libtrump", "pid7")
+#conservative treatment: The effect of a conservative cue on those who identify with a conservative party at different degrees (pid7 = 4-7)
+newdata1 = as.data.frame(cbind(rep(1, 4), rep(1, 4), rep(0, 4), seq(4, 7, 1)))
+colnames(newdata1) <- c("race_white", "contrump", "libtrump", "pid7")
+# These are predictions of the level of support at each Republican partisan level given the data table above with no cue:
+plx0 <- posterior_linpred(model1, newdata = newdata, transform = TRUE)
+#These are predictions of the level of support of a cue at each Republican partisan level given a conservative cue:
+plx1 <- posterior_linpred(model1, newdata = newdata1, transform = TRUE)
+# This estimates the causal effect of cues on different levels of Republican partisanship:
+diff.cons <- plx1 - plx0
 
-# Citations
-The Github repo for this milestone in online.^["https://github.com/carine-h/milestone_6"]
-Here is an in text citation for the paper I am replicating as well as its Dataverse data: @main-paper and @dataverse.
-Here is an in text citation for the stargazer package I use: @stargazer.
-I used this paper for supplementary information: @paper2.
-Finally, I use many techniques from our textbook: @RAOS.
+diff.cons.med <- diff.cons%>%
+    as_tibble()%>%
+    summarize_all(median)
+
+# NOT SURE IF I CAN DO SE PREDS WITH POSTERIOR_LINPRED
+# This is the staandard error of the estimates causal effects:
+#diff.cons.se <- sqrt(plx1$se.fit^2 + plx0$se.fit^2)
+# These are the upper and lower confidence intervals the causal effect. They are calculated by adding and subtract a standard deviation times the standard error calculated above:
+# IS THIS A CONF INTERVAL, 95%?, 65%?:
+#upper.cons <- diff.cons + 1.96*diff.cons.se
+#lower.cons <- diff.cons - 1.96*diff.cons.se
+# plots next to each other
+par(mfrow = c(1, 2)) 
+# This chunk plots the causal effects the same way that figure 2 did, but with partisanship on the x-axis:
+#dev.new(width = 4.5, height = 7)
+plot(seq(4, 7, 1), diff.cons.med, ylim = c(-.25, .25), pch = 16, ylab = "Estimated Average Treatment Effect", xlab = "Level of Partisan Affilitation", axes = F, main = "Conservative Trump Treatment")
+#segments(x0 = c(seq(4, 7, 1), x1 = seq(4, 7, 1)), y0 = lower.cons, y1 = upper.cons, col = "#d17b7b80", lwd = 2)
+points(seq(4, 7, 1), diff.cons.med, pch = 16)
+abline(h = 0)
+# changed titles to match change in id
+axis(1, at = seq(4, 7, 1), labels = c("Independent", "Lean GOP", "Weak GOP", "Strong GOP"), cex.axis = .8)
+axis(2, at = seq(-.45, .25, .05), las = 2)
+box()
+
+# The same steps as above are repeated here, but using the liberal cue as treatment on Republican partisans:
+newdata1 = as.data.frame(cbind(rep(1, 4), rep(1, 4), rep(0, 4), rep(0, 4), rep(1, 4), seq(4, 7, 1)))
+colnames(newdata1) <- c("race_white", "republican", "democrat", "contrump", "libtrump", "pid7")
+# Like above, these are the predictions for the control and for the treatment:
+plx0 <- posterior_linpred(model1, newdata = newdata, transform = TRUE)
+plx1 <- posterior_linpred(model1, newdata = newdata1, transform = TRUE)
+# Here we calculate the causal effect and the standard error:
+diff.lib <- plx1 - plx0
+diff.lib.med <- diff.lib%>%
+    as_tibble()%>%
+    summarize_all(median)
+
+#diff.lib.se <- sqrt(plx1$se.fit^2 + plx0$se.fit^2)
+# These are the upper and lower confidence intervals:
+#upper.lib <- diff.lib + 1.96*diff.lib.se
+#lower.lib <- diff.lib - 1.96*diff.lib.se
+# Here is the plot:
+#dev.new(width = 4.5, height = 7)
+plot(seq(4, 7, 1), diff.lib.med, ylim = c(-.25, .25), pch = 16, ylab = "Estimated Average Treatment Effect", xlab = "Levels of Partisan Affiliation", axes = F, main = "Liberal Trump Treatment")
+#segments(x0 = c(seq(4, 7, 1), x1 = seq(4, 7, 1)), y0 = lower.lib, y1 = upper.lib, col = "#4286f480", lwd = 2)
+points(seq(4, 7, 1), diff.lib.med, pch = 16)
+abline(h = 0)
+# changed titles to match change in id
+axis(1, at = seq(4, 7, 1), labels = c("Independent", "Lean GOP", "Weak GOP", "Strong GOP"), cex.axis = .8)
+axis(2, at = seq(-.25, .45, .05), las = 2)
+box()
+
+# NOTES: SAME THING AS LINEAR PREDICTION
+```
+
 
 # Bibliography
 
