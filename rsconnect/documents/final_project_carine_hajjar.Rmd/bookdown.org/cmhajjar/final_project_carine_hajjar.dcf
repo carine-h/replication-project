@@ -5,8 +5,8 @@ account: cmhajjar
 server: bookdown.org
 hostUrl: https://bookdown.org/__api__
 appId: 4209
-bundleId: 20574
+bundleId: 20576
 url: https://bookdown.org/cmhajjar/final_project_carine_hajjar/
-when: 1587163600.40618
+when: 1587166240.45713
 asMultiple: FALSE
 asStatic: FALSE

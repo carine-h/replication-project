@@ -1,0 +1,17 @@
+base
+foreign
+readstata13
+tidyverse
+ggplot2
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+stargazer
+jtools
+ggstance
+Rcpp
+rstanarm

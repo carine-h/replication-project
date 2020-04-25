@@ -128,3 +128,31 @@ box()
 ```
 
 Next, I plan to expand on the findings in Figure 3: Average Treatment Effect by Republican Party Strength. This figure deals with the sub-hypothesis that states: Strong party affiliates that share party with the cue-giver are more likely to be party loyalists. The authors test this hypothesis by running a linear regression that predicts support of a cue with the interaction between partisanship strength and liberal/conservative cues. The figure, however, only takes into account partisanship values from 4-7 (Independent to very Republican) meaning that this model only tests the treatment effect of liberal or conservative cues on Republicans, not Democrats. This makese sense given that the authors are largely looking at the impact Trump has on Republican partisanship throughout the paper. However, they do claim that the phenomenas found in their paper (especially about the disconnect between ideology and partisanship) can occur among Democrats. 
+
+
+
+CAPTIONS
+1
+, fig.cap= "Each point represents the effect on the policy cue on a political group. The effect is the coefficient extracted from a linear regression that uses conservative of liberal Trump cues (or GOP congressional cues) with a racial control to predict support for a policy. For instance, the first point is the coefficient for the liberal Trump cue when the data was filtered for just Republicans. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The black bars represent the 95% confidence interval for each predicted treatment effect. The most significant effects are seen among Republicans when given conservative and liberal Trump cues. I corrected for the mistake on the Republican point under "Republican in Congress" treatment. In the original figure, it was listed as a 0.03 conservative shift. The true effect, however, was 0.008 - a very slight liberal shift indicative of little to no effect from a GOP cue on Republicans. Below is a screenshot of the original figure in the paper for comparison."
+
+2
+, fig.cap= "The points in the left pannel represent the effect of a liberal Trump policy cue on varying levels of Democratic partisanship. The effect is the coefficient extracted from a linear regression that uses liberal Trump cues with a racial control to predict support for a policy. The points in the right pannel represent the effect of a conservative Trump policy cue on varying levels of Democratic partisanship. The effect is the coefficient extracted from a linear regression that uses conservative Trump cues with a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95% confidence interval for each predicted treatment effect. Unlike the original figure, I use Democratic partisanship on the horizontal axis rather than Republican partisanship. That is, I am testing the effect of a Trump cue on different levels of Democrats. Below is a screenshot of the original figure in the paper for comparison."
+
+
+3
+, fig.cap= "The points in the left pannel represent the effect of a liberal Trump policy cue on varying levels of Republican partisanship. The effect is the coefficient extracted from a linear regression that uses liberal Trump cues with a racial control to predict support for a policy. The points in the right pannel represent the effect of a conservative Trump policy cue on varying levels of Republican partisanship. The effect is the coefficient extracted from a binomial regression that uses conservative Trump cues with a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95% confidence interval for each predicted treatment effect. Unlike the original figure, I use a binomial regression as the prediction of policy support is binomial. I also use a prosterior linear prediction to predict treatment effects and to construct the 95% intervals. Below is a screenshot of the original figure in the paper for comparison."
+
+
+4
+, fig.cap = "This table documents the linear regressions performed throughout the study and includes their standard errors in parentheses. There is a column for each hypothesis: knowledge, party strength, Trump approval, and ideology. Support of a policy is predicted using these variables as well as the interaction models in the first column."
+
+5
+
+
+6
+
+
+7
+
+
+8
