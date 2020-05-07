@@ -33,7 +33,7 @@ Barber and Pope (2018) show that the electorate is more influenced by party posi
 \newpage
 
 # Introduction
-My replication paper will be looking at Michael Barber and Jeremy C. Pope's paper, "Does Party Trump Ideology? Disentangling Party and Ideology in America" which was published in the American Political Science Review in 2018. The paper tests whether citizens truly use their policy views to choose a partisan affiliation and if they see partisanship as more of a social identity. The paper asks: "how sincerely held are expressed political and policy opinions and are these opinions based on ideological convictions, or group loyalty?".^[1, Barber and Pope] The authors use Trump's unusual presidency to answer these questions. Since President Trump is both the leader of the GOP as well as a president that endorses both liberal and conservative views, the authors test the effect of Trump's political stances on voters' political stances.
+My replication paper will be looking at Michael Barber and Jeremy C. Pope's paper, "Does Party Trump Ideology? Disentangling Party and Ideology in America" which was published in the American Political Science Review in 2018. The paper tests whether citizens truly use their policy views to choose a partisan affiliation and if they see partisanship as more of a social identity. The paper asks: "how sincerely held are expressed political and policy opinions and are these opinions based on ideological convictions, or group loyalty?".@main-paper The authors use Trump's unusual presidency to answer these questions. Since President Trump is both the leader of the GOP as well as a president that endorses both liberal and conservative views, the authors test the effect of Trump's political stances on voters' political stances.
 
 The authors' main hypothesis asserts that the influence of President Trump will demonstrate the existence of a large bloc of party loyalists in the electorate when his influence moves opinion in either a liberal or conservative direction based on his political cue. Those who are most likely to be party loyalists have a lack of knowledge about the party's traditional views and a lack of self-proclaimed "symbolic ideological commitment." Their null hypothesis is that Trump's cue haas no effect on subgroups. They have four specific hypotheses that fall under their main hypothesis:
  1. **Knowledge Hypothesis:** Only the those with less knowledge should react to the cue and behave as party loyalists presumably because the knowledgeable gain little from the treatment (political cue).
@@ -41,20 +41,97 @@ The authors' main hypothesis asserts that the influence of President Trump will 
  3. **Approval Hypothesis:** Those who approve of the cue-giver should be more likely to be party loyalists. 
  4. **Symbolic Ideology Hypothesis:** Self-described conservatives should hold firm to their presumed beliefs and are less likely to be party loyalists because they stick with their self-described policy tenets.
 
-These hypotheses are tested by running a variety of regressions on data collected from surveys. Subjects were split into two groups, control and treatment, and asked about 10 political issues with clear partisan positions. The authors chose questions that capture policy issues in which Trump has taken either a conservative stance or a liberal stance. The control group was asked if they agree with a policy. The treatment group was asked if they agree with a policy after being prompted that Trump endorses this policy. Using this data, the authors ran linear regressions, which I replicated using R, that explained subjects' support of policies using their partisanship, approval of the president, political knowledge, and symbolic ideology. ^[R] The authors conclude, and I confirm, that all of their hypotheses hold true except the symbolic ideology hypothesis. They found that people who most strongly described themselves as conservative most strongly answered the Trump cues (both liberal and conservative). I extend this analysis by running binomial regressions which demonstrate more robust relationships. I also correct a mistake in one of the figures from the published paper.
+These hypotheses are tested by running a variety of regressions on data collected from surveys. Subjects were split into two groups, control and treatment, and asked about 10 political issues with clear partisan positions. The authors chose questions that capture policy issues in which Trump has taken either a conservative stance or a liberal stance. The control group was asked if they agree with a policy. The treatment group was asked if they agree with a policy after being prompted that Trump endorses this policy. Using this data, the authors ran linear regressions, which I replicated using R, that explained subjects' support of policies using their partisanship, approval of the president, political knowledge, and symbolic ideology.@R The authors conclude, and I confirm, that all of their hypotheses hold true except the symbolic ideology hypothesis. They found that people who most strongly described themselves as conservative most strongly answered the Trump cues (both liberal and conservative). I extend this analysis by running binomial regressions which demonstrate more robust relationships. I also correct a mistake in one of the figures from the published paper.
 
 I find that the authors' first three hypotheses are indeed correct - those with lower political knowledge, higher partisanship, and higher approval tend to respond more strongly to a cue-giver, regardless of the ideological basis of the cue. Like the authors, I also conclude that those with higher ideological levels are actually more partisan in their response to cue-givers: even if a fellow partisan cue-giver demonstrates a nontraditional policy position, those with strong self-identfied ideologies are more likely to respond to the cue. These conclusions all point to the fact that parties are becoming more of a social identity and that ideology is being displaced by partisan affinity. This has major implications for the future of the party system and the way that candidates campaign. It seems that they are catering to a social cohort rather than an ideological community. 
 
-All analysis for this paper is available at my Git hub profile and the original data is available on Data verse. ^[https://github.com/carine-h/milestone_5, https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/38BFML]
+All analysis for this paper is available at my Git hub profile and the original data is available on Dataverse. ^[https://github.com/carine-h/milestone_5, https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/38BFML]
 
 # Literature Review 
-There is an increasing amount of discussion around the legitimacy of partisan identification in terms of its ideological significance. Barber and Pope are just two of many authors noticing the decline of the ideological salience of partisanship and the populations more susceptible to this phenomenon. Zaller and Feldman (1992), for instance, discuss the weakness of voters' ideological preferences: "Most citizens, we argue, simply do not possess preformed attitudes at the level of specificity demanded in surveys. Rather, they carry around in their heads a mix of only partially consistent ideas and consideration." Rather, they feel that voters operate based on pre-conceived judgements and generalizations. With respect to Barber and Pope's findings, this means that the American electorate uses partisanship and ideology as masks for their own personal notions and prejudices. 
+There is an increasing amount of discussion around the legitimacy of partisan identification in terms of its ideological significance. Barber and Pope are just two of many authors noticing the decline of the ideological salience of partisanship and the populations more susceptible to this phenomenon. Zaller and Feldman (1992), for instance, discuss the weakness of individuals' ideological integrity. Essentially, most citizens do not haave specific opinions on all issues on which they are surveryed, but answer based on vague notions and attitudes they have haad in the past.@Zaller With respect to Barber and Pope's findings, this means that the American electorate may not accurately categorize their true ideology and partisanship. 
 
-Iyengar and Westwood (2015) mark the rise of party identity in American life, making Barber and Pope's conclusions ever more salient. According to their study, partisan polarization is as strong as racial polarization and has implications on nonpolitical judgements about members of the opposite party. ^[Iyengar] Taken with the Barber and Pope results, this could mean that cue-givers are merely partisan symbols, decreasing the importance of the actual content of their cues. This also reinforces the idea that partisanship dictates policy positions.
+Iyengar and Westwood (2015) mark the rise of party identity in American life, making Barber and Pope's conclusions ever more salient. According to their study, partisan polarization is as strong as racial polarization and has implications on nonpolitical judgements about members of the opposite party.@Iyengar Taken with the Barber and Pope results, this could mean that cue-givers are merely partisan symbols, decreasing the importance of the actual content of their cues. This also reinforces the idea that partisanship dictates policy positions.
+
+Bafumi and Shapiro (2009), however, argue the opposite: they claim that paratisanship is more indicative of ideology than it has been in the last three decades. They base this claim by noting that partisan voting is stronger than ever and highly correlated with self-reported ideology. Using linear regressions, they show that since the 1970s, ideology has become a stronger predictor for party membership overtime.@Bafumi On the other hand, Carmines and Berkman (1994) found that many conservatives were members of the Democratic power, not because of ideology, but because of a sense of identification with the "party ethos" and "symbolic values." Nevertheless, they note that the parties themselves, overall, have become more ideologically entrenched. This is especially true for the Republican party, they contend.@Carmines 
+\newpage
 
 # Paper Review 
 The authors offer four hypothesese under the broader hypothesis that partisanship and policy preference are highly intertwined. That is, partisan loyalty dictates ones policy preferences. So, for instance, a strong Republican will support liberal or conservative policies if endorsed by President Trump. It is worth noting that the authors recognize the fact that the Trump influence they see on Republicans cannot be differentiated from the "presidency effect." Overall, however, the data shows that partisanship is on average stronger than policy ideals. 
-<br>
+
+To reiterate, here are the four hypotheses:
+
+1. **Knowledge Hypothesis:** Only the those with less knowledge should react to the cue and behave as party loyalists presumably because the knowledgeable gain little from the treatment (political cue).
+ 2. **Partisan Hypothesis:** Strong party affiliates that share party with the cue-giver are more likely to be party loyalists.
+ 3. **Approval Hypothesis:** Those who approve of the cue-giver should be more likely to be party loyalists. 
+ 4. **Symbolic Ideology Hypothesis:** Self-described conservatives should hold firm to their presumed beliefs and are less likely to be party loyalists because they stick with their self-described policy tenets.
+
+The authors confirm the first three, finding that those with lower political knowledge, higher partisanship (Republican), and higher approval of the President respond to his cues, both liberal and conservative. 
+
+The fourth, hypothesis, however, turns out to be wrong. The authors find that self-described conservatives with stronger ideological identifications are actually more prone to response to support conservative and liberal policies from President Trump. This means that idelogy has become less moral and philosophical, but more social. 
+
+The linear regressions used to test these hypotheses can be observed in the replicated table below. 
+
+```{r table 1, results= "asis", fig.height = 4, fig.width= 6.5, fig.align= "center", float = F}
+data <- read.dta13("Ideology_Trump.dta")
+#summary(data)
+#view(data)
+#Table 1 - Regression Results
+# In the table in the paper, the authors use the ordinary least squares regression model
+# Support is for support of the policy
+# These interaction models are used because people who strongly identify as conservative, for example, are more likely to be in the Republican party.
+# Since I am trying to best replciate Table 1, I used the same regression components. I also kept the data parametes the same because these seem to be key in identifying which subjects we are looking at. I am still trying to find a way to better understand each variable (I may even email these authors) because there is no exhaustive list. To stay safe, I left the data parameters as they were.
+# Interacting knowledge with political cues as well as key control variables:
+# this model looks at the interaction between political knowledge and conservative/liberal cues
+model1 <- lm(Support ~ libtrump*knowledge + contrump*knowledge + trump_approve 
+                     + ideo5b + republican + party_strength + race_white, 
+# Here, the author filtered for conservative trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
+                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
+# The outcome of Model 1 tells us that those with more political knwoledge are less likely to respond to liberal or conservative cues.
+# Interacting party strength with political cues as well as key control variables:
+model2 <- lm(Support ~ libtrump*party_strength + contrump*party_strength 
+                     + knowledge + ideo5b + trump_approve + republican + race_white, 
+# Here, the author chooses data for those with above-average partisanship. They also filtered for conservative Trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
+                     data = data[data$pid7 %in% c(4, 5, 6, 7) 
+                                 & (data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
+# The outcome of Model 2 shows us that strong partisans are more likely to respond to Trump cues, whether liberal or conservative.
+# Interacting Trump approval with political cues as well as key control variables:
+model3 <- lm(Support ~ libtrump*trump_approve + contrump*trump_approve 
+                     + knowledge + ideo5b + republican + party_strength + race_white, 
+# Here, they filtered for conservative Trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
+                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
+# The outcome of Model 3 shows us that those who approve of Trump are more likely to respond to Trump cues, whether liberal or conservative.
+# Interacting self-placed ideology with political cues as well as key control variables:
+model4 <- lm(Support ~ libtrump*ideo5b + contrump*ideo5b + knowledge 
+                     + trump_approve + republican + party_strength + race_white, 
+                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
+# The outcome of Model 4 shows us that those who identify as strongly conservative are more likely to respond to Trump cues, whether liberal or conservative.
+
+cat("\\begin{table}[!htbp]")
+cat("\\centering")
+cat("\\caption{Interaction Models, Including Control Variables}")
+cat("\\label{Table 1}")
+cat("\\scalebox{.7}{")
+stargazer(model1, model2, model3, model4, 
+          type = "latex",
+          title = "Interaction Models, Including Control Variables",
+          summary = FALSE, 
+          column.labels = c("Knowledge", "Party Strength", "Trump Approval", "Ideology"), 
+          covariate.labels = c("Liberal Treatment", "Knowledge", "Conservative Treatment", "Trump Approval", "Ideology", "Republican", "Party Strength", "White", "Liberal treat * Knowledge", "Conservative treat * Knowledge", "Liberal treat * Party Strength", "Conservative treat * Party Strength", "Liberal treat * Trump Approval", "Conservative treat * Trump Approval", "Liberal treat * Ideology", "Conservative treat * Ideology"), 
+          column.sep.width = "-10pt",
+          font.size = "small", 
+          omit.stat = "all", 
+          float = FALSE,
+        notes = "\\parbox[t]{10cm}{These are the main linear regressions used by Barber and Pope to test their four hypotheses. I replicated their table and got the same results. I displyed this table using the stargazer function.}")
+cat("}") # for the end of the scalebox
+cat("\\end{table}")
+
+
+```
+
+
+
+
+
 ```{r, fig.height = 4, fig.width= 5, fig.align= "center", cache = TRUE, fig.cap = "Each point represents the effect on the policy cue on a political group. The effect is the coefficient extracted from a linear regression that uses conservative of liberal Trump cues (or GOP congressional cues) with a racial control to predict support for a policy. For instance, the first point is the coefficient for the liberal Trump cue when the data was filtered for just Republicans. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The most significant effects are seen among Republicans when given conservative and liberal Trump cues. I corrected for the mistake on the Republican point under Republican in Congress treatment. In the original figure it was listed as a 0.03 conservative shift. Yet the true effect was 0.008 which is a very slight liberal shift indicative of little to no effect from a GOP cue on Republicans. Below is a screenshot of the original figure in the paper for comparison."}
 # We are looking to see the effect of different cues (liberal, conservative, and conservative from congress) on Republicans, Democrats, and Independents. 
 # Regression for average treatment effects of a conservative, liberal, and congression conservative cue among Republicans:
@@ -122,25 +199,14 @@ abline(h = 0, lty = 2)
 abline(v = seq(1.5, 3.5, 1), lty = 2, col = "grey")
 # This labels the points in the first panel
 text(2.8,.28, "comparison group is no cue")
-text(1, .16, "Republicans", cex = .7)
-text(.82, -.01, "Democrats", cex = .7)
-text(1.4, .04, "Independents", cex = .7)
+text(1.14, .16, "Republicans", cex = .7)
+text(.82, -.05, "Democrats", cex = .7)
+text(1.5, .06, "Independents", cex = .7)
 box()
 ```
-<br>
 
-To reiterate, here are the four hypotheses:
 
-1. **Knowledge Hypothesis:** Only the those with less knowledge should react to the cue and behave as party loyalists presumably because the knowledgeable gain little from the treatment (political cue).
- 2. **Partisan Hypothesis:** Strong party affiliates that share party with the cue-giver are more likely to be party loyalists.
- 3. **Approval Hypothesis:** Those who approve of the cue-giver should be more likely to be party loyalists. 
- 4. **Symbolic Ideology Hypothesis:** Self-described conservatives should hold firm to their presumed beliefs and are less likely to be party loyalists because they stick with their self-described policy tenets.
-
-The authors confirm the first three, finding that those with lower political knowledge, higher partisanship (Republican), and higher approval of the President respond to his cues, both liberal and conservative. 
-
-The fourth, hypothesis, however, turns out to be wrong. The authors find that self-described conservatives with stronger ideological identifications are actually more prone to response to support conservative and liberal policies from President Trump. This means that idelogy has become less moral and philosophical, but more social. 
-<br>
-
+\newpage
 # Replication
 I was able to replicate the Interactions Models table (Table 1) and Figures 1-5 which test each of the hypotheses in the paper. The only issue I ran into was in Figure 1: Average Treatment Effect of Policy Cues. This table claims that cues from GOP leaders on Republicans make Republicans about 3% less likely to vote liberal. This is not consistent with the outcome of the authors' regression which shows that Republicans were slightly more likely to vote liberally. I presented this mistake to the authors and they verified my findings.
 
@@ -149,6 +215,8 @@ In the extension, I will be addressing a plotting issue in Figure 1, expanding t
 
 ## Extension 1: Correcting the Mistake on Figure 1
 To begin, I will address the issue with Figure 1, which I describe above. I have actually already addressed it in the replication done above. Essentially, the regression result is not consisten with the outcome plotted in the graph. This could be an important addition to the findings in the paper - Republicans actually have a very slight aversion to cues from GOP leaders. This deepends the authors' findings that partisan identity may be more of a group identity rather than an ideological marker.
+
+I found one mistake - the cofficient for Republicans in Congress on the Republican subset is displayed as about -0.03 probability of voting for liberal policy while the regression tells us that it is actually about 0.008. I correct this in my figure. 
 
 ```{r, fig.height = 4, fig.width= 5, fig.align= "center", cache = TRUE, fig.cap = "Each point represents the effect on the policy cue on a political group. The effect is the coefficient extracted from a linear regression that uses conservative of liberal Trump cues (or GOP congressional cues) with a racial control to predict support for a policy. For instance, the first point is the coefficient for the liberal Trump cue when the data was filtered for just Republicans. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The most significant effects are seen among Republicans when given conservative and liberal Trump cues. I corrected for the mistake on the Republican point under Republican in Congress treatment. In the original figure it was listed as a 0.03 conservative shift. Yet the true effect was 0.008 which is a very slight liberal shift indicative of little to no effect from a GOP cue on Republicans. Below is a screenshot of the original figure in the paper for comparison."}
 # We are looking to see the effect of different cues (liberal, conservative, and conservative from congress) on Republicans, Democrats, and Independents. 
@@ -216,22 +284,22 @@ axis(2, at = seq(-.2, .2, .05), las = 2, cex.axis = .8)
 abline(h = 0, lty = 2)
 abline(v = seq(1.5, 3.5, 1), lty = 2, col = "grey")
 # This labels the points in the first panel
-text(2.8,.28, "comparison group is no cue")
-text(1, .2, "Republicans", cex = .7)
-text(.82, -.04, "Democrats", cex = .7)
-text(1.4, .08, "Independents", cex = .7)
+text(1.14, .16, "Republicans", cex = .7)
+text(.82, -.05, "Democrats", cex = .7)
+text(1.5, .06, "Independents", cex = .7)
 box()
 
 
 # dir.create("pictures")
 ```
 
-<br>
 ![Figure 1, Barber and Pope](./pictures/fig1.png)
 
-I found one mistake - the cofficient for Republicans in Congress on the Republican subset is displayed as about -0.03 probability of voting for liberal policy while the regression tells us that it is actually about 0.008. I correct this in my figure. 
-
+\newpage
 ## Extension 2: Average Treatment Effect by Party Strength Among Democrats rather than Republicans
+In order to see if the relationship between Trump cues and partisanship is only exclusive to Republicans, I would like to run a similar model using partisanship levels among Democrats. This would mean repeating the steps done in Figure 2, but testing the cue's effects on partisanship levels from 1-4 (very Democrat to Independent). I predict that there will be a different effect given the fact that Democrats would be answering cues from Trump. Therefore, I expect there to be some sort of aversionary effect: even if Trump advocates a liberal policy, they will support it less than their Republican counterpoints at the same level of partisanship just because the cue is from the a Republican leader (especially one as polarizing as Trump). 
+
+The results show that Democrats of different partisan levels (Independent to strong Democrat) do not respond significantly to conservative or liberal Trump cues. There is an interesting trend among different levels of Democrats when given a conservative cue: as partisanship becomes more Democrat, Democrats are more and more likely to vote liberally when given a conservative cue. It is important to note, however, that uncertainty is greatest at the strongest lebel of Democrat. Liberal cues, however, have almost no effect on different levels of partisanship to the left. 
 ```{r, fig.height = 4, fig.width= 6.5, fig.align= "center", cache = TRUE, fig.cap = "This figure looks at the effect of Trump cues on Democrats at different levels of self-reported partisanship. This differs Barber and Pope's figure 2 because it tests the effect of Trump cues on different levels of Democratic partisanship rather than among Republicans. The left panel represents a conservative cue and the right represents a liberal cue. The effect of the cue is the coefficient extracted from a linear regression that uses conservative (or liberal) Trump cues, partisanship, a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The figure shows that a liberal Trump cue has little to no effect on Democrats while a conservative Trump cue seems to make stronger Democrats act more liberally. However, the uncertainty increases with the level of partisanship rendering this trend inconclusive."}
 # FIGURE 2 EXTENSION 1 
 # EXTENSION: TESTING FIGURE THREE WITH DEMOCRATS (ID= 1-4)
@@ -300,11 +368,6 @@ box()
 ```
 <br>
 ![Figure 3, Barber and Pope](./pictures/fig3.png)
-
-
-In order to see if the relationship between Trump cues and partisanship is only exclusive to Republicans, I would like to run a similar model using partisanship levels among Democrats. This would mean repeating the steps done in Figure 2, but testing the cue's effects on partisanship levels from 1-4 (very Democrat to Independent). I predict that there will be a different effect given the fact that Democrats would be answering cues from Trump. Therefore, I expect there to be some sort of aversionary effect: even if Trump advocates a liberal policy, they will support it less than their Republican counterpoints at the same level of partisanship just because the cue is from the a Republican leader (especially one as polarizing as Trump). 
-
-The results show that Democrats of different partisan levels (Independent to strong Democrat) do not respond significantly to conservative or liberal Trump cues. There is an interesting trend among different levels of Democrats when given a conservative cue: as partisanship becomes more Democrat, Democrats are more and more likely to vote liberally when given a conservative cue. It is important to note, however, that uncertainty is greatest at the strongest lebel of Democrat. Liberal cues, however, have almost no effect on different levels of partisanship to the left. 
 
 ## Extension 3: Binomial Regression instead of Linear on Barber and Pope's Figure 2
 Finally, I want to take Figure 2 and see if I can create a more robust model. These regression models are currently linear and use interactions to predict the outcome of a cue given something like partisanship, ideology, etc. The authors then use the predict function to predict support of a policy and to find the causal effect of recieving a cue by subtracting the response outcome for the treated from a fake data set of untreated individuals. I believe that by using a binomial regression and the posterior_linpred function, I could create a more robust model and prediction, thus achieving a more accurate causal effect. 
@@ -436,62 +499,7 @@ box()
 # Appendix 
 The results from Barber and Pope (2018) were successfully replicated.^["https://github.com/carine-h/replication-project"]
 
-```{r table 1, include=FALSE}
-data <- read.dta13("Ideology_Trump.dta")
-#summary(data)
-#view(data)
-#Table 1 - Regression Results
-# In the table in the paper, the authors use the ordinary least squares regression model
-# Support is for support of the policy
-# These interaction models are used because people who strongly identify as conservative, for example, are more likely to be in the Republican party.
-# Since I am trying to best replciate Table 1, I used the same regression components. I also kept the data parametes the same because these seem to be key in identifying which subjects we are looking at. I am still trying to find a way to better understand each variable (I may even email these authors) because there is no exhaustive list. To stay safe, I left the data parameters as they were.
-# Interacting knowledge with political cues as well as key control variables:
-# this model looks at the interaction between political knowledge and conservative/liberal cues
-model1 <- lm(Support ~ libtrump*knowledge + contrump*knowledge + trump_approve 
-                     + ideo5b + republican + party_strength + race_white, 
-# Here, the author filtered for conservative trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
-                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 1 tells us that those with more political knwoledge are less likely to respond to liberal or conservative cues.
-# Interacting party strength with political cues as well as key control variables:
-model2 <- lm(Support ~ libtrump*party_strength + contrump*party_strength 
-                     + knowledge + ideo5b + trump_approve + republican + race_white, 
-# Here, the author chooses data for those with above-average partisanship. They also filtered for conservative Trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
-                     data = data[data$pid7 %in% c(4, 5, 6, 7) 
-                                 & (data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 2 shows us that strong partisans are more likely to respond to Trump cues, whether liberal or conservative.
-# Interacting Trump approval with political cues as well as key control variables:
-model3 <- lm(Support ~ libtrump*trump_approve + contrump*trump_approve 
-                     + knowledge + ideo5b + republican + party_strength + race_white, 
-# Here, they filtered for conservative Trump cues that were answered as well as liberal Trump cues that were answered. In this way, this regression looks at those who answered cues if there were any (?):
-                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 3 shows us that those who approve of Trump are more likely to respond to Trump cues, whether liberal or conservative.
-# Interacting self-placed ideology with political cues as well as key control variables:
-model4 <- lm(Support ~ libtrump*ideo5b + contrump*ideo5b + knowledge 
-                     + trump_approve + republican + party_strength + race_white, 
-                     data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
-# The outcome of Model 4 shows us that those who identify as strongly conservative are more likely to respond to Trump cues, whether liberal or conservative.
-
-cat("\\begin{table}[!htbp]")
-cat("\\centering")
-cat("\\caption{Interaction Models, Including Control Variables}")
-cat("\\label{Table 1}")
-cat("\\scalebox{.7}{")
-stargazer(model1, model2, model3, model4, 
-          type = "latex", 
-          summary = FALSE, 
-          title = "Interaction Models, Including Control Variables", 
-          column.labels = c("Knowledge", "Party Strength", "Trump Approval", "Ideology"), 
-          covariate.labels = c("Liberal Treatment", "Knowledge", "Conservative Treatment", "Trump Approval", "Ideology", "Republican", "Party Strength", "White", "Liberal treat * Knowledge", "Conservative treat * Knowledge", "Liberal treat * Party Strength", "Conservative treat * Party Strength", "Liberal treat * Trump Approval", "Conservative treat * Trump Approval", "Liberal treat * Ideology", "Conservative treat * Ideology"), 
-          column.sep.width = "-10pt",
-          font.size = "small", 
-          omit.stat = "all", 
-          float = FALSE)
-cat("}") # for the end of the scalebox
-cat("\\end{table}")
-
-```
-
-```{r, fig.height = 4, fig.width= 6.5, fig.align= "center", cache = TRUE, fig.cap= "This figure looks at the effect of Trump cues on Republicans at different levels of self-reported political knowledge. The left panel represents a conservative cue and the right represents a liberal cue. The effect of the cue is the coefficient extracted from a linear regression that uses conservative (or liberal) Trump cues, political knowledge, and a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The figure shows that Republicans with lower political knowledge are most likely to support a Trump cue, whether conservative or liberal."}
+```{r, fig.height = 4, fig.width= 6.5, fig.align= "center", cache = TRUE, include = FALSE, fig.cap= "This figure looks at the effect of Trump cues on Republicans at different levels of self-reported political knowledge. The left panel represents a conservative cue and the right represents a liberal cue. The effect of the cue is the coefficient extracted from a linear regression that uses conservative (or liberal) Trump cues, political knowledge, and a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The figure shows that Republicans with lower political knowledge are most likely to support a Trump cue, whether conservative or liberal."}
 # This code will culminate in plot that looks at the treatment effect (political cue) on those with varying political knowledge. # The hypothesis here states: Only the those with less knowledge should react to the cue and behave as party loyalists presumably because the knowledgeable gain little from the treatment (political cue).
 # Model 1 is a linear regression that looks that the impact of political knowledge on response to cues. The authors include an interaction between liberal cues and knowledge as well as conservative cues and knowledge to see if there is any discrepancy between cues' effects with knowledge:
 model1 <- lm(Support ~ race_white + libtrump*knowledge + contrump*knowledge, data = data[(data$contrump == 1 | data$self == 1 | data$libtrump == 1),])
@@ -556,7 +564,7 @@ axis(2, at = seq(-.25, .15, .05), las = 2)
 box()
 ```
 
-```{r, fig.height = 4, fig.width= 6.5, fig.align= "center", cache = TRUE, fig.cap= "This figure looks at the effect of Trump cues on Republicans at different levels of self-reported partisanship. The left panel represents a conservative cue and the right represents a liberal cue. The effect of the cue is the coefficient extracted from a linear regression that uses conservative (or liberal) Trump cues, partisanship, a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The figure shows that Republicans with stronger partisanship are most likely to support a Trump cue, whether conservative or liberal."}
+```{r, fig.height = 4, fig.width= 6.5, fig.align= "center", include = FALSE, cache = TRUE, fig.cap= "This figure looks at the effect of Trump cues on Republicans at different levels of self-reported partisanship. The left panel represents a conservative cue and the right represents a liberal cue. The effect of the cue is the coefficient extracted from a linear regression that uses conservative (or liberal) Trump cues, partisanship, a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The figure shows that Republicans with stronger partisanship are most likely to support a Trump cue, whether conservative or liberal."}
 # This code will culminate in plot that looks at the treatment effect (political cue) on those with varying partisan affiliation. 
 # The hypothesis here states: Strong party affiliates that share party with the cue-giver are more likely to be party loyalists.
 # This model is the basis of the predictions and will help determine the causal effect of political cues on different levels of partisanship among Republicans. This model estimates support of policy based on race and the interaction between cues (conservative and liberal) and political ideology:
@@ -614,7 +622,7 @@ box()
 # ADD ON BY LOOKING AT PARTY AFFILIATION EFFECT ON DEMOCRATS
 ```
 
-```{r, fig.height = 4, fig.width= 6.5, fig.align= "center", cache = TRUE, fig.cap= "This figure looks at the effect of Trump cues on Republicans at different levels of self-reported approval of the President. The left panel represents a conservative cue and the right represents a liberal cue. The effect of the cue is the coefficient extracted from a linear regression that uses conservative (or liberal) Trump cues, approval rating, and a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The figure shows that Republicans with stronger approval of Trump are most likely to support a Trump cue, whether conservative or liberal."}
+```{r, fig.height = 4, fig.width= 6.5, fig.align= "center", include = FALSE, cache = TRUE, fig.cap= "This figure looks at the effect of Trump cues on Republicans at different levels of self-reported approval of the President. The left panel represents a conservative cue and the right represents a liberal cue. The effect of the cue is the coefficient extracted from a linear regression that uses conservative (or liberal) Trump cues, approval rating, and a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The figure shows that Republicans with stronger approval of Trump are most likely to support a Trump cue, whether conservative or liberal."}
 # This code will culminate in plot that looks at the treatment effect (political cue) on those with varying approval levels of Trump. 
 # The hypothesis here states: Those who approve of the cue-giver should be more likely to be party loyalists. 
 # This model is the basis of the predictions and will help determine the causal effect of political cues on different levels of approval of Trump. This model estimates support of policy based on race and the interaction between cues (conservative and liberal) and approval:
@@ -668,7 +676,7 @@ axis(2, at = seq(-.25, .25, .05), las = 2)
 box()
 ```
 <br>
-```{r, fig.height = 4, fig.width= 6.5, fig.align= "center", cache = TRUE, fig.cap= "This figure looks at the effect of Trump cues on Republicans at different levels of self-reported ideological strength. The left panel represents a conservative cue and the right represents a liberal cue. The effect of the cue is the coefficient extracted from a linear regression that uses conservative (or liberal) Trump cues, idelogical strength, and a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The figure shows that Republicans with stronger self-reported ideology are most likely to support a Trump cue, whether conservative or liberal. This means that ideology is becoming more indicative of partisanship than true views. It has, perhaps, become less moral and philosophical, but more social."}
+```{r, fig.height = 4, fig.width= 6.5, fig.align= "center", cache = TRUE, include = FALSE, fig.cap= "This figure looks at the effect of Trump cues on Republicans at different levels of self-reported ideological strength. The left panel represents a conservative cue and the right represents a liberal cue. The effect of the cue is the coefficient extracted from a linear regression that uses conservative (or liberal) Trump cues, idelogical strength, and a racial control to predict support for a policy. The vertical axis represents the increased probability of voting for a liberal policy. Positive values indicate a liberal shift while negative values indicate a conservative shift. The horizontal axis represents increasing partisanship. The black bars represent the 95 percent confidence interval for each predicted treatment effect. The figure shows that Republicans with stronger self-reported ideology are most likely to support a Trump cue, whether conservative or liberal. This means that ideology is becoming more indicative of partisanship than true views. It has, perhaps, become less moral and philosophical, but more social."}
 # This code will culminate in plot that looks at the treatment effect (political cue) on those with varying ideologies. 
 # The hypothesis here states: Self-described conservatives should hold firm to their presumed beliefs and are less likely to be party loyalists because they stick with their self-described policy tenets.
 # The steps here are the same as those above, just using ideology. I will not go through each in detail.
