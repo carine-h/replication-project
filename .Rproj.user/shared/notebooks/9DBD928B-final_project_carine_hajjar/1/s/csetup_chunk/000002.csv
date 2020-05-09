@@ -1,0 +1,71 @@
+"0","knitr::opts_chunk$set(echo = FALSE, message = FALSE)"
+"0","knitr::write_bib(""bib.bib"", width = 60)"
+"2","package(s) bib.bib not found"
+"0","#knitr::write_bib(""bib.bib"", width = 60)"
+"0","library(foreign)"
+"0","library(readstata13)"
+"0","library(tidyverse)"
+"2","Registered S3 methods overwritten by 'broom':
+  method            from  
+  tidy.glht         jtools
+  tidy.summary.glht jtools
+"
+"2","Registered S3 methods overwritten by 'dbplyr':
+  method         from
+  print.tbl_lazy     
+  print.tbl_sql      
+"
+"2","[30m── [1mAttaching packages[22m ─────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──[39m
+"
+"2","[30m[32m✓[30m [34mggplot2[30m 3.3.0     [32m✓[30m [34mpurrr  [30m 0.3.3
+[32m✓[30m [34mtibble [30m 3.0.0     [32m✓[30m [34mdplyr  [30m 0.8.5
+[32m✓[30m [34mtidyr  [30m 1.0.2     [32m✓[30m [34mstringr[30m 1.4.0
+[32m✓[30m [34mreadr  [30m 1.3.1     [32m✓[30m [34mforcats[30m 0.5.0[39m
+"
+"2","[30m── [1mConflicts[22m ────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31mx[30m [34mdplyr[30m::[32mfilter()[30m masks [34mstats[30m::filter()
+[31mx[30m [34mdplyr[30m::[32mlag()[30m    masks [34mstats[30m::lag()[39m
+"
+"0","library(stargazer)"
+"2","
+Please cite as: 
+
+"
+"2"," Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+"
+"2"," R package version 5.2.2. https://CRAN.R-project.org/package=stargazer 
+
+"
+"0","library(jtools)"
+"0","library(ggstance)"
+"2","
+Attaching package: ‘ggstance’
+
+"
+"2","The following objects are masked from ‘package:ggplot2’:
+
+    geom_errorbarh, GeomErrorbarh
+
+"
+"0","library(rstanarm)"
+"2","Loading required package: Rcpp
+"
+"2","rstanarm (Version 2.19.2, packaged: 2019-10-01 20:20:33 UTC)
+"
+"2","- Do not expect the default priors to remain the same in future rstanarm versions.
+"
+"2","Thus, R scripts should specify priors explicitly, even if they are just the defaults.
+"
+"2","- For execution on a local, multicore CPU with excess RAM we recommend calling
+"
+"2","options(mc.cores = parallel::detectCores())
+"
+"2","- bayesplot theme set to bayesplot::theme_default()
+"
+"2","   * Does _not_ affect other ggplot2 plots
+"
+"2","   * See ?bayesplot_theme_set for details on theme setting
+"
+"0","#Please cite as: "
+"0","# Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables."
+"0","# R package version 5.2.2. https://CRAN.R-project.org/package=stargazer "

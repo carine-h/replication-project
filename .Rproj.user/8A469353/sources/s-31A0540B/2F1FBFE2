@@ -1,0 +1,27 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1586891167259.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "607436658",
+    "id" : "2F1FBFE2",
+    "lastKnownWriteTime" : 1588991691,
+    "last_content_update" : 1588991691981,
+    "path" : "~/Desktop/R studio/replication-project/final_project_carine_hajjar.Rmd",
+    "project_path" : "final_project_carine_hajjar.Rmd",
+    "properties" : {
+        "cursorPosition" : "734,8",
+        "last_setup_crc32" : "31A0540B2e101bdd",
+        "scrollLine" : "722",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

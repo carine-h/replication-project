@@ -1,0 +1,2 @@
+"0","#segments(x0 = c(seq(4, 7, 1), x1 = seq(4, 7, 1)), y0 = lower.cons, y1 = upper.cons, col = ""#d17b7b80"", lwd = 2)"
+"0","points(seq(4, 7, 1), diff.cons.med, pch = 16)"

@@ -1,0 +1,5 @@
+"0","library(foreign)"
+"0","library(readstata13)"
+"0","data <- read.dta13(""data/Ideology_Trump.dta"")"
+"0","mturk <- read.csv(""data/Trump_Obama.csv"")"
+"0","# dir.create(""data"")"
