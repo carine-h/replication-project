@@ -1,0 +1,4 @@
+Barber_Pope_replication_file.R (type/x-r-syntax) 84491 bytes.
+Ideology_Trump.dta (application/x-stata) 3879948 bytes.
+README.txt (text/plain) 989 bytes.
+Trump_Obama.csv (text/csv) 254800 bytes.
